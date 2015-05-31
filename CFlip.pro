@@ -16,8 +16,10 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        CFlipMainWindow.cpp
+        CFlipMainWindow.cpp \
+    Gw2SpidyAllItemsDataBase.cpp
 
-HEADERS  += CFlipMainWindow.h
+HEADERS  += CFlipMainWindow.h \
+    Gw2SpidyAllItemsDataBase.h
 
 FORMS    += CFlipMainWindow.ui

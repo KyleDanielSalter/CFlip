@@ -7,10 +7,8 @@ namespace Ui {
 	class CFlipMainWindow;
 }
 
-class CFlipMainWindow : public QMainWindow
-{
+class CFlipMainWindow : public QMainWindow {
 	Q_OBJECT
-
 public:
 	explicit CFlipMainWindow(QWidget *parent = 0);
 	~CFlipMainWindow();
