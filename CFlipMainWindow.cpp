@@ -1,15 +1,14 @@
 #include "CFlipMainWindow.h"
 #include "ui_CFlipMainWindow.h"
-#include "Gw2SpidyAllItemsDataBase.h"
 #include <qDebug>
+#include "Gw2ItemDB.h"
 
 CFlipMainWindow::CFlipMainWindow(QWidget *parent) :
 	QMainWindow(parent),
 	ui(new Ui::CFlipMainWindow)
 {
 	ui->setupUi(this);
-	Gw2SpidyAllItemsDataBase::load();
-	auto test = Gw2SpidyAllItemsDataBase::getData(0);
+	Gw2ItemDB::create();
 }
 
 CFlipMainWindow::~CFlipMainWindow() {

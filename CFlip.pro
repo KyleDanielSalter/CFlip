@@ -17,9 +17,17 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         CFlipMainWindow.cpp \
-    Gw2SpidyAllItemsDataBase.cpp
+    Gw2ItemDB.cpp \
+    Gw2API.cpp \
+    Gw2ItemIDListParser.cpp \
+    Gw2ItemsParser.cpp \
+    ImageDownloader.cpp
 
 HEADERS  += CFlipMainWindow.h \
-    Gw2SpidyAllItemsDataBase.h
+    Gw2ItemDB.h \
+    Gw2API.h \
+    Gw2ItemIDListParser.h \
+    Gw2ItemsParser.h \
+    ImageDownloader.h
 
 FORMS    += CFlipMainWindow.ui
