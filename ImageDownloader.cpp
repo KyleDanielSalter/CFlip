@@ -9,7 +9,6 @@
 
 ImageDownloader::ImageDownloader(QObject *parent)
 	: QObject(parent)
-	, NAM(new QNetworkAccessManager(this))
 {}
 
 QPixmap ImageDownloader::get(QString url) {
@@ -18,7 +17,8 @@ QPixmap ImageDownloader::get(QString url) {
 
 QByteArray ImageDownloader::getImageAsByteArray(QString url) {
 	QByteArray ret;
-	QNetworkReply* reply = NAM->get(QNetworkRequest(QUrl(url)));
+	QNetworkAccessManager NAM;
+	QNetworkReply* reply = NAM.get(QNetworkRequest(QUrl(url)));
 	QEventLoop eventLoop;
 	connect(reply, SIGNAL(finished()), &eventLoop, SLOT(quit()));
 	eventLoop.exec();

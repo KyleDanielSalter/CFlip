@@ -8,7 +8,9 @@ CFlipMainWindow::CFlipMainWindow(QWidget *parent) :
 	ui(new Ui::CFlipMainWindow)
 {
 	ui->setupUi(this);
-	Gw2ItemDB::create();
+	Gw2ItemDB::init();
+	auto testhash = Gw2ItemDB::getIDIconUrlHashMap();
+	QString test = testhash[1];
 }
 
 CFlipMainWindow::~CFlipMainWindow() {

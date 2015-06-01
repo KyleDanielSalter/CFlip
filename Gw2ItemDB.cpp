@@ -5,58 +5,85 @@
 #include <QSqlQuery>
 #include <QSqlError>
 #include <QStringList>
+#include <QSqlQueryModel>
+#include <QSqlRecord>
 #include "Gw2ItemIDListParser.h"
 #include "Gw2ItemsParser.h"
 #include "ImageDownloader.h"
 
 QString Gw2ItemDB::path = "data/item.db";
-QString Gw2ItemDB::scheme =
+QString Gw2ItemDB::itemsTableScheme =
 	"CREATE TABLE ITEMS("
 	"ID INT PRIMARY KEY NOT NULL,"
 	"NAME TEXT NOT NULL,"
-	"ICON BLOB,"
+	"ICONURL TEXT,"
 	"JSONDATASTRING TEXT NOT NULL);";
 QSqlDatabase Gw2ItemDB::db;
 QHash<qint32, QString> Gw2ItemDB::idNameHashMap;
 QHash<QString, qint32> Gw2ItemDB::nameIDHashMap;
-QHash<qint32, QPixmap> Gw2ItemDB::idIconHashMap;
+QHash<qint32, QString> Gw2ItemDB::idIconUrlHashMap;
 QHash<qint32, QString> Gw2ItemDB::idJsonStringHashMap;
 
 void Gw2ItemDB::init() {
 	//Check if there is an existing database, if there is not, create one
 	QFileInfo dbInfo(path);
 	if(dbInfo.exists() && dbInfo.isFile()) {
+		db = QSqlDatabase::addDatabase("QSQLITE");
+		db.setDatabaseName(path);
 		loadCache();
 		//if there is something wrong, recreate the db.
-		if(!ready()) {
+		if(!ready())
 			create();
-		}
-	} else {
+	} else
 		create();
-	}
 }
 
 void Gw2ItemDB::create() {
 	format();
 	QStringList allIDs = Gw2ItemIDListParser::get();
-	QList<Gw2ItemData> allItemData = Gw2ItemsParser::get(allIDs);
-	ImageDownloader iconDownloader;
-	for(auto i : allItemData) {
-		qDebug() << QString::number(i.id);
-		idNameHashMap[i.id] = i.name;
-		nameIDHashMap[i.name] = i.id;
-		//Get image as a byte array to make the QPixmap and to store to database
-		QByteArray iconByteArray = iconDownloader.getImageAsByteArray(i.iconUrl);
-		QPixmap icon(iconByteArray);
-		idIconHashMap[i.id] = icon;
-		idJsonStringHashMap[i.id] = i.jsonString;
+	QList<Gw2ItemData> allItems;
+
+	//Max number of IDs that can be queried at once is 200
+	//List of IDs partitioned into lists of 200 IDs max
+	QList<QStringList> partitionedIDLists;
+	QStringList partition;
+	qint32 partitionIndex = 0;
+	qint32 numMaxIndices = 199;
+	for(auto i : allIDs) {
+		if(partitionIndex > numMaxIndices) {
+			partitionIndex = 0;
+			partitionedIDLists << partition;
+			partition.clear();
+		}
+		partition << i;
+		partitionIndex++;
+	}
+	//If there are leftover IDs in the partition, add it to the list
+	if(!partition.empty())
+		partitionedIDLists << partition;
+
+	//Download item data for all IDs
+	for(auto i : partitionedIDLists) {
+		allItems.append(Gw2ItemsParser::get(i));
+	}
+	//For each item data, load the cache and write to the database.
+	for(auto i : allItems) {
+		qDebug() << i.id;
+		Gw2ItemData item = i;
+		idNameHashMap[item.id] = item.name;
+		nameIDHashMap[item.name] = item.id;
+		idIconUrlHashMap[item.id] = item.iconUrl;
+		idJsonStringHashMap[item.id] = item.jsonString;
 		QSqlQuery q;
-		q.prepare("INSERT INTO ITEMS VALUES(:ID,:NAME:,:ICON,:JSONSTRING");
-		q.bindValue(":ID", i.id);
-		q.bindValue(":NAME", i.name);
-		q.bindValue(":ICON", iconByteArray);
+		q.prepare("INSERT INTO ITEMS VALUES(:ID,:NAME,:ICONURL,:JSONSTRING);");
+		q.bindValue(":ID", item.id);
+		q.bindValue(":NAME", item.name);
+		q.bindValue(":ICONURL", item.iconUrl);
+		q.bindValue(":JSONSTRING", item.jsonString);
 		q.exec();
 	}
+	db.commit();
+	db.close();
 }
 
 QString Gw2ItemDB::getItemName(qint32 itemID) {
@@ -78,13 +105,97 @@ qint32 Gw2ItemDB::getItemID(QString itemName) {
 	return -1;
 }
 
+QString Gw2ItemDB::getIconUrl(qint32 itemID) {
+	if(ready())
+		return idIconUrlHashMap[itemID];
+	else
+		qDebug() << "Warning! Attempt to query iconUrl with ID " +
+			QString::number(itemID) + "while db is not ready."
+			"Returning empty string";
+	return "";
+}
+
+QString Gw2ItemDB::getIconUrl(QString itemName) {
+	if(ready())
+		return idIconUrlHashMap[getItemID(itemName)];
+	else
+		qDebug() << "Warning! Attempt to query iconUrl with ID " + itemName +
+			"while db is not ready. Returning empty string";
+	return "";
+}
+
+QString Gw2ItemDB::getJsonDataString(qint32 itemID) {
+	if(ready())
+		return idJsonStringHashMap[itemID];
+	else
+		qDebug() << "Warning! Attempt to query jsonDataString with ID " +
+			QString::number(itemID) + "while db is not ready."
+			"Returning empty string";
+	return "";
+}
+
+QString Gw2ItemDB::getJsonDataString(QString itemName) {
+	if(ready())
+		return idJsonStringHashMap[getItemID(itemName)];
+	else
+		qDebug() << "Warning! Attempt to query jsonDataString with ID " + itemName +
+			"while db is not ready. Returning empty string";
+	return "";
+}
+
+QHash<qint32, QString> Gw2ItemDB::getIDNameHashMap() {
+	if(!ready())
+		qDebug() << "Warning! Attempt to return idNameHashMap from item db while db is not ready. Returning empty hashmap.";
+	return idNameHashMap;
+}
+
+QHash<QString, qint32> Gw2ItemDB::getNameIDHashMap() {
+	if(!ready())
+		qDebug() << "Warning! Attempt to return nameIDHashMap from item db while db is not ready. Returning empty hashmap.";
+	return nameIDHashMap;
+}
+
+QHash<qint32, QString> Gw2ItemDB::getIDIconUrlHashMap() {
+	if(!ready())
+		qDebug() << "Warning! Attempt to return idIconUrlHashMap from item db while db is not ready. Returning empty hashmap.";
+	return idIconUrlHashMap;
+}
+
+QHash<qint32, QString> Gw2ItemDB::getIDJsonDataStringHashMap() {
+	if(!ready())
+		qDebug() << "Warning! Attempt to return idJsonStringHashMap from item db while db is not ready. Returning empty hashmap.";
+	return idJsonStringHashMap;
+}
+
+bool Gw2ItemDB::open() {
+	if(!db.isOpen()) {
+		db.open();
+		if(db.isOpenError()) {
+			qDebug() << "Error opening item database. Error string: " + db.lastError().text();
+			db.close();
+			return false;
+		}
+		return true;
+	}
+	qDebug() << "Warning! Attempting to open database while it is already opened.";
+	return true;
+}
+
+
+bool Gw2ItemDB::close() {
+	if(db.isOpen()) {
+		db.close();
+		return true;
+	}
+	qDebug() << "Warning! Attempting to close database while it is already closed.";
+	return false;
+}
+
 bool Gw2ItemDB::ready() {
-	//check if database is opened and caches are filled.
-	if(
-		db.isOpen() &&
-		!(idNameHashMap.isEmpty() &&
+	//check if the caches are filled
+	if(!(idNameHashMap.isEmpty() &&
 		nameIDHashMap.isEmpty() &&
-		idIconHashMap.isEmpty() &&
+		idIconUrlHashMap.isEmpty() &&
 		idJsonStringHashMap.isEmpty()))
 		return true;
 	else
@@ -99,17 +210,34 @@ void Gw2ItemDB::format() {
 		if(!dbFile.remove())
 			qDebug() << "Error deleting item database file: " + dbFile.errorString();
 	}
-	//Create a new DB
-	db = QSqlDatabase::addDatabase("QSQLITE");
-	db.setDatabaseName(path);
-	if(db.open()) {
+	//If the new databased successfully opened, create the item table
+	if(open()) {
 		QSqlQuery q;
-		q.exec(scheme);
+		q.exec(itemsTableScheme);
 	}
 }
 
 void Gw2ItemDB::loadCache() {
-	if(ready()) {
-
-	}
+	QFileInfo dbInfo(path);
+	if(dbInfo.exists() && dbInfo.isFile() && open()) {
+		QSqlQueryModel model;
+		model.setQuery("SELECT * FROM ITEMS");
+		//Make sure to load the entire db
+		while(model.canFetchMore())
+			model.fetchMore();
+		qint32 rowCount = model.rowCount();
+		for(qint32 i = 0; i < rowCount; ++i) {
+			QSqlRecord record = model.record(i);
+			qint32 id = record.value("ID").toInt();
+			QString name = record.value("NAME").toString();
+			QString iconUrl = record.value("ICONURL").toString();
+			QString jsonDataString = record.value("JSONDATASTRING").toString();
+			idNameHashMap[id] = name;
+			nameIDHashMap[name] = id;
+			idIconUrlHashMap[id] = iconUrl;
+			idJsonStringHashMap[id] = jsonDataString;
+		}
+	} else
+		qDebug() << "Error loading database into cache. Database is not opened or does not exist";
+	close();
 }
