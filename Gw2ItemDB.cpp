@@ -38,6 +38,13 @@ void Gw2ItemDB::init() {
 		create();
 }
 
+void Gw2ItemDB::clear() {
+	idNameHashMap.clear();
+	nameIDHashMap.clear();
+	idIconUrlHashMap.clear();
+	idJsonStringHashMap.clear();
+}
+
 void Gw2ItemDB::create() {
 	format();
 	QStringList allIDs = Gw2ItemIDListParser::get();

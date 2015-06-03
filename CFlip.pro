@@ -21,13 +21,17 @@ SOURCES += main.cpp\
     Gw2API.cpp \
     Gw2ItemIDListParser.cpp \
     Gw2ItemsParser.cpp \
-    ImageDownloader.cpp
+    ImageDownloader.cpp \
+    Gw2ListingsParser.cpp \
+    Gw2Currency.cpp
 
 HEADERS  += CFlipMainWindow.h \
     Gw2ItemDB.h \
     Gw2API.h \
     Gw2ItemIDListParser.h \
     Gw2ItemsParser.h \
-    ImageDownloader.h
+    ImageDownloader.h \
+    Gw2ListingsParser.h \
+    Gw2Currency.h
 
 FORMS    += CFlipMainWindow.ui

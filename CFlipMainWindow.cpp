@@ -9,10 +9,9 @@ CFlipMainWindow::CFlipMainWindow(QWidget *parent) :
 {
 	ui->setupUi(this);
 	Gw2ItemDB::init();
-	auto testhash = Gw2ItemDB::getIDIconUrlHashMap();
-	QString test = testhash[1];
 }
 
 CFlipMainWindow::~CFlipMainWindow() {
+	Gw2ItemDB::clear();
 	delete ui;
 }

@@ -9,6 +9,7 @@
 class Gw2ItemDB {
 public:
 	static void init();
+	static void clear();
 	static void create();
 	static QString getItemName(qint32 itemID);
 	static qint32 getItemID(QString itemName);
