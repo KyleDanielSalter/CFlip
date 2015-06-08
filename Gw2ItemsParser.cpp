@@ -14,7 +14,8 @@ Gw2ItemData::Gw2ItemData()
 {}
 
 Gw2ItemData Gw2ItemsParser::get(QString itemID) {
-	Gw2API api(singleItemURIStr, itemID); Gw2ItemData ret;
+	Gw2API api(singleItemURIStr, itemID);
+	Gw2ItemData ret;
 	QString dataString = api.get();
 	if(!dataString.isEmpty()) {
 		ret.jsonString = dataString;
@@ -28,9 +29,9 @@ Gw2ItemData Gw2ItemsParser::get(QString itemID) {
 	return ret;
 }
 
-QList<Gw2ItemData> Gw2ItemsParser::get(QStringList itemIDs) {
+QHash<qint32, Gw2ItemData> Gw2ItemsParser::get(QStringList itemIDs) {
 	Gw2API api(multiItemURIStr, itemIDs.join(','));
-	QList<Gw2ItemData> retList;
+	QHash<qint32, Gw2ItemData> retHash;
 	QString dataString = api.get();
 	if(!dataString.isEmpty()) {
 		QJsonDocument jsonDoc = QJsonDocument::fromJson(dataString.toUtf8());
@@ -42,9 +43,9 @@ QList<Gw2ItemData> Gw2ItemsParser::get(QStringList itemIDs) {
 			ret.id = jsonObj["id"].toInt();
 			ret.name = jsonObj["name"].toString();
 			ret.iconUrl = jsonObj["icon"].toString();
-			retList.append(ret);
+			retHash[ret.id] = ret;
 		}
 	} else
 		qDebug() << "Warning! Error getting gw2 item info for itemIDs: " + itemIDs.join(',');
-	return retList;
+	return retHash;
 }

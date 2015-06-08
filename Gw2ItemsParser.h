@@ -16,7 +16,7 @@ struct Gw2ItemData {
 class Gw2ItemsParser {
 public:
 	static Gw2ItemData get(QString itemID);
-	static QList<Gw2ItemData> get(QStringList itemIDs);
+	static QHash<qint32, Gw2ItemData> get(QStringList itemIDs);
 private:
 	static QString singleItemURIStr, multiItemURIStr;
 };

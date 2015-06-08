@@ -80,3 +80,5 @@ $RECYCLE.BIN/
 *.pdb
 *.pdb
 Build/debug/CFlip.ilk
+*.obj
+Build/debug/Gw2ListingsParser.obj

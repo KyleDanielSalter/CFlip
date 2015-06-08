@@ -71,7 +71,7 @@ void Gw2ItemDB::create() {
 
 	//Download item data for all IDs
 	for(auto i : partitionedIDLists) {
-		allItems.append(Gw2ItemsParser::get(i));
+		allItems.append(Gw2ItemsParser::get(i).values());
 	}
 	//For each item data, load the cache and write to the database.
 	for(auto i : allItems) {

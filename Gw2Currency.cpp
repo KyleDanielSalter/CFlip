@@ -1,125 +1,78 @@
 #include "Gw2Currency.h"
 #include <QDebug>
+#include <QChar>
 
-Gw2Currency::Gw2Currency() : valueNum(0)
-{}
-
-Gw2Currency::Gw2Currency(const Gw2Currency &currency)
-	: valueNum(currency.getNum())
-{}
-
-Gw2Currency::Gw2Currency(const QString priceString)
-	: valueNum(convert(priceString))
-{}
-
-Gw2Currency::Gw2Currency(const qint32 valueNum) : valueNum(valueNum)
-{}
-
-qint32 Gw2Currency::convert(QString priceString) {
-	/* Currency is XX...g YYs ZZc, X being #gold, Y being #silver, Z being #copper.
-	 * All spaces and alphabetical characters are removed
-	 * Last two characters is the copper quantity, 0-99
-	 * The next two to the left is the silver quantity, 0-99
-	 * The first character to the character right before the last 4 is the
-	 * gold quantity.
-	 * Note that there are no trailing digits. 1 == 1 copper, not 1 gold
-	 * 119 == 1 silver, 19 gold, 1119 == 11 silver, 19 gold
-	 * 1111119 == 119 gold, 11 silver, 19 copper
-	 * 001, 00001, are valid inputs but are improper form.
-	 * If the price is a negative value, the first character is a '-';
-	*/
-	qint32 gold(0), silver(0), copper(0), ret(0); bool isNumber(false), isNegative(false);
-	if(!priceString.isEmpty()) {
-		//Format the string into all integers.
-		priceString.remove(' ',Qt::CaseInsensitive);
-		priceString.remove('g',Qt::CaseInsensitive);
-		priceString.remove('s',Qt::CaseInsensitive);
-		priceString.remove('c',Qt::CaseInsensitive);
-		//Now check for proper format
-		priceString.toInt(&isNumber);
-		if(isNumber && !priceString.isEmpty()) {
-
-		} else {
-			qDebug() << "Error converting price string '" + priceString + "' to Gw2Currency: String is not in an integer format.";
-			return 0;
-		}
-	} else
-		qDebug << "Error converting price string '" + priceString + "' to Gw2Currency: String is empty.";
-	return 0;
-}
-
-QString Gw2Currency::convert(qint32 valueNum) {
+QString Gw2Currency::string(qint32 number) {
 	QString ret;
-	bool isNegative; qint32 gold, silver, copper;
-	getGSC(valueNum, &isNegative, &gold, &silver, &copper);
-	if(isNegative)
-		ret += "-";
-	if(gold != 0)
-		ret += QString::number(gold) + "g ";
-	if(silver != 0)
-		ret += QString::number(silver) + "s ";
+	qint32 gold(0), silver(0), copper(0);
+	GSC(number, &gold, &silver, &copper);
+	ret += gold == 0 ? "" : QString::number(gold) + "g ";
+	ret += silver == 0 ? "" : QString::number(silver) + "s ";
 	ret += QString::number(copper) + "c";
 	return ret;
 }
 
-void Gw2Currency::getGSC(
-	qint32 valueNum,
-	bool *isNegative = false,
-	qint32 *goldOut = 0,
-	qint32 *silverOut = 0,
-	qint32 *copperOut = 0)
+qint32 Gw2Currency::number(QString string) {
+	bool isNegative(false);
+	qint32 gold(0), silver(0), copper(0);
+	if(!string.isEmpty()) {
+		//If the string contains a '-', it is a negative value, remove any dashes
+		isNegative = string.contains('-');
+		if(isNegative)
+			string.remove("-", Qt::CaseInsensitive);
+		//Separate by spaces into a list
+		QStringList strList = string.split(" ");
+		for(auto i = strList.begin(); i != strList.end(); ++i) {
+			QString str = *i;
+			if(str.contains("g", Qt::CaseInsensitive)) {
+				str.remove("g", Qt::CaseInsensitive);
+				gold = str.toInt();
+			}
+			else if (str.contains("s", Qt::CaseInsensitive)) {
+				str.remove("s", Qt::CaseInsensitive);
+				silver = str.toInt();
+			}
+			else if(str.contains("c", Qt::CaseInsensitive)) {
+				str.remove("c", Qt::CaseInsensitive);
+				copper = str.toInt();
+			} else
+				qDebug() << "Error converting Gw2Currency string " + str + " to a number";
+		}
+		qint32 num = gold * 10000 + silver * 100 + copper;
+		return isNegative ? num * -1 : num;
+	} else
+		qDebug() << "Error converting price string '" + string + "' to Gw2Currency: String is empty.";
+	return 0;
+}
+
+void Gw2Currency::GSC(qint32 number,
+	qint32 *goldOut,
+	qint32 *silverOut,
+	qint32 *copperOut)
 {
-	QString raw(QString::number(valueNum));
+	QString raw(QString::number(number));
 	//Check for negativity, if true, remove the dash
-	if(valueNum < 0) {
-		*isNegative = true;
-		raw.remove[0];
-	}
+	if(number < 0)
+		raw.remove(0, 1);
 	//Last two characters will always be the copper quantity, remove
-	*copperOut = raw.right(2).toInt();
+	*copperOut = number < 0 ? raw.right(2).toInt() * -1 : raw.right(2).toInt();
 	raw.chop(2);
 	//Now the last two will be the silver quantity, but only if the
 	//string is not empty at this point.
 	if(!raw.isEmpty()) {
-		*silverOut = raw.right(2).toInt();
+		*silverOut = number < 0 ? raw.right(2).toInt() * -1 : raw.right(2).toInt();
+		raw.chop(2);
 		//use the rest string for the gold quantity if its not empty.
 		if(!raw.isEmpty())
-			*goldOut = raw.toInt();
+			*goldOut = number < 0 ? raw.toInt() * -1 : raw.toInt();
 	}
 }
 
-qint32 Gw2Currency::getNum() const {
-
-}
-
-QString Gw2Currency::getString() const {
-
-}
-
-Gw2Currency& Gw2Currency::operator=(const Gw2Currency &other) {
-
-}
-
-Gw2Currency& Gw2Currency::operator=(const qint32 &num) {
-
-}
-
-Gw2Currency& Gw2Currency::operator=(const QString &string) {
-
-}
-
-Gw2Currency& Gw2Currency::operator+=(const Gw2Currency &rhs) {
-
-}
-
-Gw2Currency& Gw2Currency::operator-=(const Gw2Currency &rhs) {
-
-}
-
-Gw2Currency& Gw2Currency::operator*=(const Gw2Currency &rhs) {
-
-}
-
-Gw2Currency& Gw2Currency::operator/=(const Gw2Currency &rhs) {
-
+void Gw2Currency::GSC(
+	QString string,
+	qint32 *goldOut,
+	qint32 *silverOut,
+	qint32 *copperOut)
+{
+	GSC(number(string), goldOut, silverOut, copperOut);
 }

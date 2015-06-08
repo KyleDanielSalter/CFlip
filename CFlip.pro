@@ -23,7 +23,8 @@ SOURCES += main.cpp\
     Gw2ItemsParser.cpp \
     ImageDownloader.cpp \
     Gw2ListingsParser.cpp \
-    Gw2Currency.cpp
+    Gw2Currency.cpp \
+    Gw2RecipesParser.cpp
 
 HEADERS  += CFlipMainWindow.h \
     Gw2ItemDB.h \
@@ -32,6 +33,7 @@ HEADERS  += CFlipMainWindow.h \
     Gw2ItemsParser.h \
     ImageDownloader.h \
     Gw2ListingsParser.h \
-    Gw2Currency.h
+    Gw2Currency.h \
+    Gw2RecipesParser.h
 
 FORMS    += CFlipMainWindow.ui
