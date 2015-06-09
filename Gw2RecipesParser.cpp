@@ -7,12 +7,19 @@
 #include "Gw2API.h"
 
 QString Gw2RecipesParser::recipesURIStr = "recipes/";
-QString Gw2RecipesParser::recipesSearchURIStr = "recipes/search?input=";
+QString Gw2RecipesParser::recipesSearchURIStr = "recipes/search?output=";
 
 Recipe::Recipe()
 	: recipeID(-1)
 	, outputID(-1)
 	, outputItemCount(-1)
+{}
+
+Recipe::Recipe(const Recipe &other)
+	: recipeID(other.recipeID)
+	, outputID(other.outputID)
+	, outputItemCount(other.outputItemCount)
+	, ingredients(other.ingredients)
 {}
 
 Recipe::Recipe(qint32 recipeID,

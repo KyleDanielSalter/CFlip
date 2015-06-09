@@ -7,6 +7,7 @@
 #include <QStringList>
 #include <QSqlQueryModel>
 #include <QSqlRecord>
+#include <QTime>
 #include "Gw2ItemIDListParser.h"
 #include "Gw2ItemsParser.h"
 #include "ImageDownloader.h"
@@ -25,6 +26,8 @@ QHash<qint32, QString> Gw2ItemDB::idIconUrlHashMap;
 QHash<qint32, QString> Gw2ItemDB::idJsonStringHashMap;
 
 void Gw2ItemDB::init() {
+	qDebug() << "Initializing Gw2ItemDB...";
+	QTime t; t.start();
 	//Check if there is an existing database, if there is not, create one
 	QFileInfo dbInfo(path);
 	if(dbInfo.exists() && dbInfo.isFile()) {
@@ -36,6 +39,7 @@ void Gw2ItemDB::init() {
 			create();
 	} else
 		create();
+	qDebug("Time elapsed: %d ms", t.elapsed());
 }
 
 void Gw2ItemDB::clear() {
@@ -49,7 +53,6 @@ void Gw2ItemDB::create() {
 	format();
 	QStringList allIDs = Gw2ItemIDListParser::get();
 	QList<Gw2ItemData> allItems;
-
 	//Max number of IDs that can be queried at once is 200
 	//List of IDs partitioned into lists of 200 IDs max
 	QList<QStringList> partitionedIDLists;

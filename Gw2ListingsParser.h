@@ -35,9 +35,14 @@ class Gw2ListingsParser {
 public:
 	static Listings get(QString itemID);
 	static QHash<qint32, Listings> get(QStringList itemIDs);
+	static bool isValidItemID(qint32 itemID);
+	static QList<qint32> getPossibleIDs();
+	static void loadPossibleIDs();
 private:
 	static QString singleListingURIStr, multiListingURIStr;
+	static QList<qint32> possibleIDs;
 	static Listings extract(QJsonObject jsonObj);
+
 };
 
 #endif // GW2LISTINGSPARSER_H

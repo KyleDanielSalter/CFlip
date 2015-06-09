@@ -7,7 +7,8 @@
 #include "Gw2API.h"
 
 QString Gw2ListingsParser::singleListingURIStr = "commerce/listings/";
-QString Gw2ListingsParser::multiListingURIStr = "/commerce/listings?ids=";
+QString Gw2ListingsParser::multiListingURIStr = "commerce/listings?ids=";
+QList<qint32> Gw2ListingsParser::possibleIDs;
 
 Listings::Listings()
 	: itemID(-1)
@@ -104,6 +105,18 @@ QHash<qint32, Listings> Gw2ListingsParser::get(QStringList itemIDs) {
 	return retHash;
 }
 
+bool Gw2ListingsParser::isValidItemID(qint32 itemID) {
+	if(possibleIDs.isEmpty())
+		loadPossibleIDs();
+	return possibleIDs.contains(itemID);
+}
+
+QList<qint32> Gw2ListingsParser::getPossibleIDs() {
+	if(possibleIDs.isEmpty())
+		loadPossibleIDs();
+	return possibleIDs;
+}
+
 Listings Gw2ListingsParser::extract(QJsonObject jsonObj) {
 	QList<Listings::Order> buys, sells;
 	qint32 id = jsonObj["id"].toInt();
@@ -123,4 +136,16 @@ Listings Gw2ListingsParser::extract(QJsonObject jsonObj) {
 		sells << Listings::Order(listings, unit_price, quantity);
 	}
 	return Listings(id, buys, sells);
+}
+
+void Gw2ListingsParser::loadPossibleIDs() {
+	Gw2API api("commerce/listings");
+	QString dataString = api.get();
+	if(!dataString.isEmpty()) {
+		QJsonDocument jsonDoc = QJsonDocument::fromJson(dataString.toUtf8());
+		QJsonArray jsonArray = jsonDoc.array();
+		for(auto i : jsonArray)
+			possibleIDs << i.toInt();
+	} else
+		qDebug() << "Warning! Error retrieving possible listing ids";
 }

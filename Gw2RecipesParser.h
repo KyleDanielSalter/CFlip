@@ -5,14 +5,17 @@
 #include <QList>
 #include <QPair>
 
-struct Recipe {
+class Recipe {
+public:
 	Recipe();
+	Recipe(const Recipe &other);
 	Recipe(
 		qint32 recipeID,
 		qint32 outputID,
 		qint32 outputItemCount,
 		QList<QPair<qint32, qint32> > ingredients);
 	const qint32 recipeID, outputID, outputItemCount;
+	//First is itemID, second is quantity
 	const QList<QPair<qint32, qint32> > ingredients;
 };
 
