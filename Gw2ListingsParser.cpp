@@ -4,14 +4,13 @@
 #include <QJsonDocument>
 #include <QJsonArray>
 #include <QJsonValue>
-#include "Gw2API.h"
 
 QString Gw2ListingsParser::singleListingURIStr = "commerce/listings/";
 QString Gw2ListingsParser::multiListingURIStr = "commerce/listings?ids=";
-QList<qint32> Gw2ListingsParser::possibleIDs;
+Gw2API Gw2ListingsParser::singleListingAPIEndPoint(singleListingURIStr);
+Gw2API Gw2ListingsParser::multiListingAPIEndPoint(multiListingURIStr);
 
 Listings::Listings()
-	: itemID(-1)
 {}
 
 Listings::Listings(qint32 itemID)
@@ -78,9 +77,13 @@ QHash<Listings::ListingType, QList<Listings::Order> > Listings::getOrders() cons
 	return ordersHash;
 }
 
+Listings Gw2ListingsParser::get(qint32 itemID) {
+	return get(QString::number(itemID));
+}
+
 Listings Gw2ListingsParser::get(QString itemID) {
-	Gw2API api(singleListingURIStr, itemID);
-	QString dataString = api.get();
+	singleListingAPIEndPoint.setParams(itemID);
+	QString dataString = singleListingAPIEndPoint.get();
 	if(!dataString.isEmpty()) {
 		QJsonDocument jsonDoc = QJsonDocument::fromJson(dataString.toUtf8());
 		return extract(jsonDoc.object());
@@ -89,10 +92,14 @@ Listings Gw2ListingsParser::get(QString itemID) {
 	return Listings();
 }
 
+QHash<qint32, Listings> Gw2ListingsParser::get(QList<qint32> itemIDs) {
+	return get(Gw2API::intIDListToStringList(itemIDs));
+}
+
 QHash<qint32, Listings> Gw2ListingsParser::get(QStringList itemIDs) {
-	Gw2API api(multiListingURIStr, itemIDs.join(','));
+	multiListingAPIEndPoint.setParams(itemIDs.join(','));
 	QHash<qint32, Listings> retHash;
-	QString dataString = api.get();
+	QString dataString = multiListingAPIEndPoint.get();
 	if(!dataString.isEmpty()) {
 		QJsonDocument jsonDoc = QJsonDocument::fromJson(dataString.toUtf8());
 		QJsonArray jsonArray = jsonDoc.array();
@@ -105,16 +112,12 @@ QHash<qint32, Listings> Gw2ListingsParser::get(QStringList itemIDs) {
 	return retHash;
 }
 
-bool Gw2ListingsParser::isValidItemID(qint32 itemID) {
-	if(possibleIDs.isEmpty())
-		loadPossibleIDs();
-	return possibleIDs.contains(itemID);
+Gw2API* Gw2ListingsParser::getAPIEndPoint() {
+	return &singleListingAPIEndPoint;
 }
 
-QList<qint32> Gw2ListingsParser::getPossibleIDs() {
-	if(possibleIDs.isEmpty())
-		loadPossibleIDs();
-	return possibleIDs;
+Gw2API* Gw2ListingsParser::getMultiAPIEndPoint() {
+	return &multiListingAPIEndPoint;
 }
 
 Listings Gw2ListingsParser::extract(QJsonObject jsonObj) {
@@ -136,16 +139,4 @@ Listings Gw2ListingsParser::extract(QJsonObject jsonObj) {
 		sells << Listings::Order(listings, unit_price, quantity);
 	}
 	return Listings(id, buys, sells);
-}
-
-void Gw2ListingsParser::loadPossibleIDs() {
-	Gw2API api("commerce/listings");
-	QString dataString = api.get();
-	if(!dataString.isEmpty()) {
-		QJsonDocument jsonDoc = QJsonDocument::fromJson(dataString.toUtf8());
-		QJsonArray jsonArray = jsonDoc.array();
-		for(auto i : jsonArray)
-			possibleIDs << i.toInt();
-	} else
-		qDebug() << "Warning! Error retrieving possible listing ids";
 }

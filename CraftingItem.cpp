@@ -50,8 +50,8 @@ void CraftingItem::setTradingAndVendorValues() {
 	} else {
 		qDebug() << "Error getting vendor value from itemDB with id " + QString::number(outputItemID);
 	}
-	if(Gw2ListingsParser::isValidItemID(outputItemID)) {
-		outputItemListings = Gw2ListingsParser::get(QString::number(outputItemID));
+	//if(Gw2ListingsParser::isValidItemID(outputItemID)) {
+		//outputItemListings = Gw2ListingsParser::get(QString::number(outputItemID));
 		//Will be reused.
 		/*if(outputItemListings.getItemID() != -1) {
 			if(type == OUTPUT) {
@@ -68,7 +68,7 @@ void CraftingItem::setTradingAndVendorValues() {
 		} else {
 			qDebug() << "Error getting gw2 ItemListings " + QString::number(outputItemID);
 		}*/
-	}
+	//}
 }
 
 void CraftingItem::constructIngredientTree() {

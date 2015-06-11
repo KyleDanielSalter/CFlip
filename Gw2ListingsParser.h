@@ -5,6 +5,10 @@
 #include <QList>
 #include <QHash>
 #include <QJsonObject>
+#include <memory>
+#include "Gw2API.h"
+#include "Gw2APIParser.h"
+#include "Gw2APIResult.h"
 
 class Listings {
 public:
@@ -31,16 +35,18 @@ private:
 };
 
 
-class Gw2ListingsParser {
+class Gw2ListingsParser{
 public:
+	static Listings get(qint32 itemID);
 	static Listings get(QString itemID);
+	static QHash<qint32, Listings> get(QList<qint32> itemIDs);
 	static QHash<qint32, Listings> get(QStringList itemIDs);
-	static bool isValidItemID(qint32 itemID);
-	static QList<qint32> getPossibleIDs();
-	static void loadPossibleIDs();
+	static Gw2API* getAPIEndPoint();
+	static Gw2API* getMultiAPIEndPoint();
+
 private:
 	static QString singleListingURIStr, multiListingURIStr;
-	static QList<qint32> possibleIDs;
+	static Gw2API singleListingAPIEndPoint, multiListingAPIEndPoint;
 	static Listings extract(QJsonObject jsonObj);
 
 };

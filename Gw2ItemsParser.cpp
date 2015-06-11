@@ -4,19 +4,24 @@
 #include <QJsonObject>
 #include <QJsonArray>
 #include <QJsonValue>
-#include "Gw2API.h"
 
-QString Gw2ItemsParser::singleItemURIStr = "/items/";
-QString Gw2ItemsParser::multiItemURIStr = "/items?ids=";
+QString Gw2ItemsParser::singleItemURIStr = "items/";
+QString Gw2ItemsParser::multiItemURIStr = "items?ids=";
+Gw2API Gw2ItemsParser::singleItemAPIEndPoint(singleItemURIStr);
+Gw2API Gw2ItemsParser::multiItemAPIEndPoint(multiItemURIStr);
 
 Gw2ItemData::Gw2ItemData()
 	: id(-1)
 {}
 
+Gw2ItemData Gw2ItemsParser::get(qint32 itemID) {
+	return get(QString::number(itemID));
+}
+
 Gw2ItemData Gw2ItemsParser::get(QString itemID) {
-	Gw2API api(singleItemURIStr, itemID);
+	singleItemAPIEndPoint.setParams(itemID);
 	Gw2ItemData ret;
-	QString dataString = api.get();
+	QString dataString = singleItemAPIEndPoint.get();
 	if(!dataString.isEmpty()) {
 		ret.jsonString = dataString;
 		QJsonDocument jsonDoc = QJsonDocument::fromJson(dataString.toUtf8());
@@ -29,10 +34,14 @@ Gw2ItemData Gw2ItemsParser::get(QString itemID) {
 	return ret;
 }
 
+QHash<qint32, Gw2ItemData> Gw2ItemsParser::get(QList<qint32> itemIDs) {
+	return get(Gw2API::intIDListToStringList(itemIDs));
+}
+
 QHash<qint32, Gw2ItemData> Gw2ItemsParser::get(QStringList itemIDs) {
-	Gw2API api(multiItemURIStr, itemIDs.join(','));
+	multiItemAPIEndPoint.setParams(itemIDs.join(','));
 	QHash<qint32, Gw2ItemData> retHash;
-	QString dataString = api.get();
+	QString dataString = multiItemAPIEndPoint.get();
 	if(!dataString.isEmpty()) {
 		QJsonDocument jsonDoc = QJsonDocument::fromJson(dataString.toUtf8());
 		QJsonArray array = jsonDoc.array();
@@ -48,4 +57,8 @@ QHash<qint32, Gw2ItemData> Gw2ItemsParser::get(QStringList itemIDs) {
 	} else
 		qDebug() << "Warning! Error getting gw2 item info for itemIDs: " + itemIDs.join(',');
 	return retHash;
+}
+
+Gw2API* Gw2ItemsParser::getAPIEndPoint() {
+	return &singleItemAPIEndPoint;
 }

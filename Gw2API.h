@@ -2,26 +2,32 @@
 #define GW2API_H
 
 #include <QObject>
-#include <QString>
-#include <QURL>
+#include <QStringList>
+#include <QUrl>
 #include <memory>
 
 class QNetworkAccessManager;
 
 class Gw2API : public QObject {
-	Q_OBJECT;
+	Q_OBJECT
 public:
+	Gw2API();
 	Gw2API(QString URI, QString params = QString(), QObject *parent = nullptr);
 	QString get();
 	QUrl getURL();
-	void setURI(QString newURI);
 	void setParams(QString newParams);
+	void loadEndPointIDList();
+	bool checkID(qint32 id);
+	QList<qint32> getEndPointIDList();
+	static QStringList intIDListToStringList(QList<qint32> idList);
 private:
 	static QString gw2APIURLStr;
-	QString URI;
+	const QString URI;
 	QString params;
-	QString data;
+	QList<qint32> endPointIDList;
 	std::shared_ptr<QNetworkAccessManager> NAM;
+	void openNAM();
+	void closeNAM();
 };
 
 #endif // GW2API_H

@@ -19,25 +19,27 @@ SOURCES += main.cpp\
         CFlipMainWindow.cpp \
     Gw2ItemDB.cpp \
     Gw2API.cpp \
-    Gw2ItemIDListParser.cpp \
     Gw2ItemsParser.cpp \
     ImageDownloader.cpp \
     Gw2ListingsParser.cpp \
     Gw2Currency.cpp \
     Gw2RecipesParser.cpp \
     CraftingItem.cpp \
-    Gw2TradingPost.cpp
+    Gw2APIParser.cpp \
+    Gw2APIMultiCaller.cpp \
+    Gw2APIResult.cpp
 
 HEADERS  += CFlipMainWindow.h \
     Gw2ItemDB.h \
     Gw2API.h \
-    Gw2ItemIDListParser.h \
     Gw2ItemsParser.h \
     ImageDownloader.h \
     Gw2ListingsParser.h \
     Gw2Currency.h \
     Gw2RecipesParser.h \
     CraftingItem.h \
-    Gw2TradingPost.h
+    Gw2APIParser.h \
+    Gw2APIMultiCaller.h \
+    Gw2APIResult.h
 
 FORMS    += CFlipMainWindow.ui

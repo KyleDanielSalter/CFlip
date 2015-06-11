@@ -8,7 +8,6 @@
 #include <QSqlQueryModel>
 #include <QSqlRecord>
 #include <QTime>
-#include "Gw2ItemIDListParser.h"
 #include "Gw2ItemsParser.h"
 #include "ImageDownloader.h"
 
@@ -51,12 +50,12 @@ void Gw2ItemDB::clear() {
 
 void Gw2ItemDB::create() {
 	format();
-	QStringList allIDs = Gw2ItemIDListParser::get();
+	QList<qint32> allIDs = Gw2ItemsParser::getAPIEndPoint()->getEndPointIDList();
 	QList<Gw2ItemData> allItems;
 	//Max number of IDs that can be queried at once is 200
 	//List of IDs partitioned into lists of 200 IDs max
-	QList<QStringList> partitionedIDLists;
-	QStringList partition;
+	QList<QList<qint32>> partitionedIDLists;
+	QList<qint32> partition;
 	qint32 partitionIndex = 0;
 	qint32 numMaxIndices = 199;
 	for(auto i : allIDs) {

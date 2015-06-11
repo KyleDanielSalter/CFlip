@@ -4,10 +4,13 @@
 #include <QJsonObject>
 #include <QJsonArray>
 #include <QJsonValue>
-#include "Gw2API.h"
 
-QString Gw2RecipesParser::recipesURIStr = "recipes/";
+QString Gw2RecipesParser::singleRecipesURIStr = "recipes/";
+QString Gw2RecipesParser::multiRecipesURIStr = "recipes?ids=";
 QString Gw2RecipesParser::recipesSearchURIStr = "recipes/search?output=";
+Gw2API Gw2RecipesParser::singleRecipesAPIEndPoint(singleRecipesURIStr);
+Gw2API Gw2RecipesParser::multiRecipeAPIEndPoint(multiRecipesURIStr);
+Gw2API Gw2RecipesParser::recipesSearchAPIEndPoint(recipesSearchURIStr);
 
 Recipe::Recipe()
 	: recipeID(-1)
@@ -32,6 +35,10 @@ Recipe::Recipe(qint32 recipeID,
 	, ingredients(ingredients)
 {}
 
+qint32 Gw2RecipesParser::getRecipeID(qint32 itemID) {
+	return getRecipeID(QString::number(itemID));
+}
+
 qint32 Gw2RecipesParser::getRecipeID(QString itemID) {
 	Gw2API api(recipesSearchURIStr, itemID);
 	QString dataString = api.get();
@@ -44,8 +51,12 @@ qint32 Gw2RecipesParser::getRecipeID(QString itemID) {
 	return -1;
 }
 
+Recipe Gw2RecipesParser::getRecipe(qint32 recipeID) {
+	return getRecipe(QString::number(recipeID));
+}
+
 Recipe Gw2RecipesParser::getRecipe(QString recipeID) {
-	Gw2API api(recipesURIStr, recipeID);
+	Gw2API api(singleRecipesURIStr, recipeID);
 	QString dataString = api.get();
 	if(!dataString.isEmpty()) {
 		QJsonDocument jsonDoc = QJsonDocument::fromJson(dataString.toUtf8());
@@ -62,6 +73,27 @@ Recipe Gw2RecipesParser::getRecipe(QString recipeID) {
 	return Recipe();
 }
 
+/*QHash<qint32, Recipe> Gw2RecipesParser::getRecipeList(QList<qint32> recipeIDs) {
+
+}
+
+QHash<qint32, Recipe> Gw2RecipesParser::getRecipeList(QStringList recipeID) {
+
+}*/
+
+Recipe Gw2RecipesParser::getItemRecipe(qint32 itemID){
+	return getRecipe(getRecipeID(itemID));
+}
+
 Recipe Gw2RecipesParser::getItemRecipe(QString itemID) {
 	return getRecipe(QString::number(getRecipeID(itemID)));
 }
+
+/*QHash<qint32, Recipe> Gw2RecipesParser::getItemRecipeHash(QList<qint32> itemIDs) {
+
+}
+
+QHash<qint32, Recipe> Gw2RecipesParser::getItemRecipeHash(QStringList itemIDs) {
+
+}
+*/
