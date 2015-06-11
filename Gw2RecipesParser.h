@@ -16,9 +16,10 @@ public:
 		qint32 outputID,
 		qint32 outputItemCount,
 		QList<QPair<qint32, qint32> > ingredients);
-	const qint32 recipeID, outputID, outputItemCount;
+	qint32 recipeID, outputID, outputItemCount;
 	//First is itemID, second is quantity
-	const QList<QPair<qint32, qint32> > ingredients;
+	QList<QPair<qint32, qint32> > ingredients;
+	Recipe& operator=(const Recipe &rhs);
 };
 
 class Gw2RecipesParser {

@@ -27,7 +27,8 @@ SOURCES += main.cpp\
     CraftingItem.cpp \
     Gw2APIParser.cpp \
     Gw2APIMultiCaller.cpp \
-    Gw2APIResult.cpp
+    Gw2APIResult.cpp \
+    MultiListingCaller.cpp
 
 HEADERS  += CFlipMainWindow.h \
     Gw2ItemDB.h \
@@ -40,6 +41,7 @@ HEADERS  += CFlipMainWindow.h \
     CraftingItem.h \
     Gw2APIParser.h \
     Gw2APIMultiCaller.h \
-    Gw2APIResult.h
+    Gw2APIResult.h \
+    MultiListingCaller.h
 
 FORMS    += CFlipMainWindow.ui

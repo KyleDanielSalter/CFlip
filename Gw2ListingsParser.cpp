@@ -11,6 +11,7 @@ Gw2API Gw2ListingsParser::singleListingAPIEndPoint(singleListingURIStr);
 Gw2API Gw2ListingsParser::multiListingAPIEndPoint(multiListingURIStr);
 
 Listings::Listings()
+	: itemID(-1)
 {}
 
 Listings::Listings(qint32 itemID)
@@ -69,12 +70,18 @@ float Listings::getAveragePrice(ListingType type, qint32 quantity) {
 		}
 		return totalValue / totalQuantity;
 	} else
-		qDebug() << "Warning! Attempting to return avg price of item " + QString::number(itemID) + "when hash is empty.";
+		qDebug() << "Warning! Attempting to return avg price of item " + QString::number(itemID) + " when hash is empty.";
 	return -1.0;
 }
 
 QHash<Listings::ListingType, QList<Listings::Order> > Listings::getOrders() const {
 	return ordersHash;
+}
+
+Listings& Listings::operator=(const Listings &rhs) {
+	this->itemID = rhs.getItemID();
+	this->ordersHash = rhs.getOrders();
+	return *this;
 }
 
 Listings Gw2ListingsParser::get(qint32 itemID) {

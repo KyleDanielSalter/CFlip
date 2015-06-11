@@ -29,6 +29,7 @@ public:
 	qint32 getBoundaryPrice(ListingType type);
 	float getAveragePrice(ListingType type, qint32 quantity);
 	QHash<ListingType, QList<Order> > getOrders() const;
+	Listings&operator=(const Listings &rhs);
 private:
 	qint32 itemID;
 	QHash<ListingType, QList<Order> > ordersHash;

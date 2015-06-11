@@ -42,7 +42,8 @@ void Gw2API::loadEndPointIDList() {
 	//For some logical reason I could not figure out, leaving the backslash
 	//returned an empty string.
 	QString uriNoSlash = URI;
-	uriNoSlash.remove("/", Qt::CaseInsensitive);
+	if(uriNoSlash.at(uriNoSlash.size() - 1) == '/')
+		uriNoSlash.chop(1);
 	Gw2API endPoint(uriNoSlash);
 	QString dataString = endPoint.get();
 	if(!dataString.isEmpty()) {

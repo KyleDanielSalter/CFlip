@@ -35,6 +35,14 @@ Recipe::Recipe(qint32 recipeID,
 	, ingredients(ingredients)
 {}
 
+Recipe& Recipe::operator=(const Recipe &rhs) {
+	this->recipeID = rhs.recipeID;
+	this->outputID = rhs.outputID;
+	this->outputItemCount = rhs.outputItemCount;
+	this->ingredients = rhs.ingredients;
+	return *this;
+}
+
 qint32 Gw2RecipesParser::getRecipeID(qint32 itemID) {
 	return getRecipeID(QString::number(itemID));
 }
