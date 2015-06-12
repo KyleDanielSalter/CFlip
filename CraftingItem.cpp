@@ -8,6 +8,7 @@
 #include "Gw2ItemDB.h"
 #include "Gw2API.h"
 #include "MultiListingCaller.h"
+#include "Gw2Currency.h"
 
 CraftingItem::CraftingItem(
 	qint32 outputItemID,
@@ -21,7 +22,7 @@ CraftingItem::CraftingItem(
 	, quantity(quantity)
 	, type(isOutput ? OUTPUT : COMPONENT)
 	, vendorValue(-1)
-	, costToCraft(-1.0)
+	, costToCraft(0)
 	, avgPrice(-1.0)
 {
 	setTradingAndVendorValues();
@@ -40,7 +41,7 @@ CraftingItem::CraftingItem(
 	, quantity(quantity)
 	, type(isOutput ? OUTPUT : COMPONENT)
 	, vendorValue(-1)
-	, costToCraft(-1.0)
+	, costToCraft(0)
 	, avgPrice(-1.0)
 {
 	setTradingAndVendorValues();
@@ -48,7 +49,7 @@ CraftingItem::CraftingItem(
 }
 
 CraftingItem::~CraftingItem() {
-	qDebug() << "Destroying " +QString::number(outputItemID);
+	qDebug() << "Destroying " + QString::number(outputItemID);
 	for(auto i : components)
 		delete i;
 }
@@ -92,9 +93,6 @@ QList<CraftingItem*> CraftingItem::getComponents() {
 	return components;
 }
 
-float CraftingItem::getOptimalValue() {
-	return 0;
-}
 
 void CraftingItem::setTradingAndVendorValues() {
 	QString dataString = Gw2ItemDB::getJsonDataString(outputItemID);
@@ -112,75 +110,14 @@ void CraftingItem::setTradingAndVendorValues() {
 void CraftingItem::constructIngredientTree() {
 	qint32 recipeID = Gw2RecipesParser::getRecipeID(QString::number(outputItemID));
 	if(recipeID != -1) {
-		Recipe recipe = Gw2RecipesParser::getRecipe(QString::number(recipeID));
+		recipe = Gw2RecipesParser::getRecipe(QString::number(recipeID));
 		for(QPair<qint32, qint32> i : recipe.ingredients)
-			components.append(new CraftingItem(i.first, buyMethod, sellMethod, i.second, false));
+			components.append(new CraftingItem(i.first, buyMethod, sellMethod, i.second * quantity, false));
 	}
 	if(type == OUTPUT) {
 		MultiListingCaller::load();
 		calculateTree();
 	}
-}
-
-void CraftingItem::optimizeTree() {
-	/*//If there is no vendor value, vendor value = -1
-	//If there is no listing, avgPrice = -1
-	//if there all are -1/no recipe, this is a karma item
-	avgPrice = getListingMethodAvgPrice();
-	if(type != OUTPUT) {
-		//If there is a recipe, reset the CTC
-		if(recipe.recipeID != -1) {
-			costToCraft = 0;
-			//sum the CTC
-			for(auto i : components)
-				costToCraft += i.getOptimalValue();
-			//If there are no listings or a vendor value, crafting is the best
-			if(avgPrice == -1) {
-				if(vendorValue == -1)
-					type = COMPONENT;
-				//if there is a vendor, type is now the best of the CTC and vendor
-				else
-					type = costToCraft < vendorValue ? COMPONENT : VENDOR;
-			} else {
-				//There is a listing, if no vendor, best of listing and CTC
-				if(vendorValue == -1)
-					type = costToCraft < avgPrice ? COMPONENT : TRADING_POST;
-				//there is all 3, compare all
-				else {
-					if(costToCraft < avgPrice && costToCraft < vendorValue)
-						type = COMPONENT;
-					else
-						type = avgPrice < vendorValue ? TRADING_POST : VENDOR;
-				}
-			}
-		}
-		//No recipe, so it is either a vendor, trading post, or karma item
-		if(listings.getItemID() == -1) {
-			if(vendorValue == -1)
-				type = KARMA;
-			else
-				type = VENDOR;
-		}
-		//Use the best price of the vendor or listing
-		type = avgPrice < vendorValue ? TRADING_POST : VENDOR;
-	}*/
-}
-
-float CraftingItem::calculateCTC() {
-	if(components.size() == 0) {
-		if(type == KARMA)
-			return 0;
-		else if (type == VENDOR)
-			return vendorValue;
-		else if (type == TRADING_POST)
-			return avgPrice;
-	} else {
-		float ret = 0;
-		for(auto i : components)
-			ret += i->calculateCTC() * i->getQuantity();
-		return ret;
-	}
-	return 0;
 }
 
 void CraftingItem::calculateTree() {
@@ -190,26 +127,102 @@ void CraftingItem::calculateTree() {
 	//calculate all non root vertexes as if they are leaves
 	if(type != OUTPUT) {
 		avgPrice = getListingMethodAvgPrice();
-		if(avgPrice != -1 && vendorValue != -1) {
-			type = avgPrice < vendorValue ? TRADING_POST : VENDOR;
-		}
-		else if(avgPrice == -1 && vendorValue == -1)
-			type = KARMA;
-		else if(avgPrice == -1)
-			type = KARMA;
+		type = avgPrice == -1 ? KARMA : TRADING_POST;
 	} else {
 		//Returned to root, traverse through the tree to calculate the CTC
-		costToCraft = calculateCTC();
+		avgPrice = getListingMethodAvgPrice();
+		calculateCostToCraft();
 	}
+}
+
+float CraftingItem::calculateCostToCraft() {
+	if(components.size() == 0) {
+		if(type == KARMA)
+			return 0;
+		else if (type == TRADING_POST)
+			return avgPrice * quantity;
+	} else {
+		for(auto i : components)
+			costToCraft += i->calculateCostToCraft();
+		if(type != OUTPUT) {
+			if(costToCraft < avgPrice * quantity) {
+				type = COMPONENT;
+				return costToCraft;
+			} else
+				return avgPrice * quantity;
+		}
+	}
+	return costToCraft;
+}
+
+qint32 CraftingItem::print() {
+	static qint32 tab = 0;
+	QString debug;
+	QString name = Gw2ItemDB::getItemName(outputItemID);
+	QString typeStr;
+	qint32 value = 0;
+	if(type == OUTPUT) {
+		typeStr = "OUTPUT";
+		if(costToCraft < avgPrice * quantity) {
+			value = costToCraft;
+			typeStr += " CRAFT";
+
+		} else {
+			value = avgPrice;
+			typeStr += " BUY";
+		}
+	}
+	else if(type == COMPONENT) {
+		typeStr = "COMPONENT";
+		value = costToCraft;
+	}
+	else if(type == TRADING_POST) {
+		typeStr = "TRADING_POST";
+		value = avgPrice;
+	}
+	else if(type == KARMA) {
+		typeStr = "KARMA";
+		value = 0;
+	}
+	for(qint32 i = 0; i < tab; ++i)
+		debug += "\t";
+	debug += QString::number(quantity) + " " + name + " " + typeStr + " " + Gw2Currency::string(value);
+	qDebug() << debug;
+	tab++;
+	for(auto i : components)
+		tab -= i->print();
+	if(type == OUTPUT)
+		tab = 0;
+	return 1;
+}
+
+void CraftingItem::setQuantity(qint32 num) {
+	quantity = num;
+	avgPrice = -1;
+	costToCraft = 0;
+	if(type != OUTPUT)
+		type = COMPONENT;
+	if(recipe.recipeID != -1) {
+		for(qint32 i = 0; i < components.size(); ++i) {
+			for(qint32 j = 0; j < recipe.ingredients.size(); ++j) {
+				if(recipe.ingredients[j].first = components[i]->getOutputItemID()) {
+					components[i]->setQuantity(recipe.ingredients[i].second * quantity);
+					break;
+				}
+			}
+
+		}
+	}
+	calculateTree();
 }
 
 float CraftingItem::getListingMethodAvgPrice() {
 	if(listings.getItemID() != -1) {
 		if(type == OUTPUT) {
 			if(sellMethod == BUY)
-				return listings.getAveragePrice(Listings::BUYS, quantity * recipe.outputItemCount);
+				return listings.getAveragePrice(Listings::BUYS, quantity);
 			else
-				return listings.getAveragePrice(Listings::SELLS, quantity * recipe.outputItemCount);
+				return listings.getAveragePrice(Listings::SELLS, quantity);
 		} else {
 			if(buyMethod == BUY)
 				return listings.getAveragePrice(Listings::BUYS, quantity);

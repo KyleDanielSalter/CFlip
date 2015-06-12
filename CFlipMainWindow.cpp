@@ -11,7 +11,8 @@ CFlipMainWindow::CFlipMainWindow(QWidget *parent) :
 {
 	ui->setupUi(this);
 	Gw2ItemDB::init();
-	CraftingItem test(12725);
+	CraftingItem test(12725, CraftingItem::BUY, CraftingItem::SELL, 3);
+	test.print();
 }
 
 CFlipMainWindow::~CFlipMainWindow() {

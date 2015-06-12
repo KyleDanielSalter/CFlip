@@ -13,8 +13,7 @@ public:
 		OUTPUT,			//root
 		COMPONENT,		//internal vertex
 		TRADING_POST,	//leaf
-		VENDOR,			//leaf
-		KARMA,			//leaf
+		KARMA,
 	};
 	enum OrderType {
 		BUY,
@@ -22,16 +21,16 @@ public:
 	};
 	explicit CraftingItem(
 		qint32 outputItemID,
-		OrderType buyMethod = BUY,	//How items are bought, i.e. post buy order
+		OrderType buyMethod = BUY,		//How items are bought, i.e. post buy order
 		OrderType sellMethod = SELL,	//How items are sold, i.e. post sell order
-		qint32 quantity = 1,
-		bool isOutput = true);
+		qint32 quantity = 1,			//Leave 1 if root item
+		bool isOutput = true);			//Leave true if root item
 	explicit CraftingItem(
 		QString outputItemName,
-		OrderType buyMethod = BUY,	//How items are bought, i.e. BUY == post buy order
+		OrderType buyMethod = BUY,		//How items are bought, i.e. BUY == post buy order
 		OrderType sellMethod = SELL,	//How items are sold, i.e. SELL == post sell order
 		qint32 quantity = 1,
-		bool isOutput = true);
+		bool isOutput = true);			//Leave true if root item
 	~CraftingItem();
 	qint32 getOutputItemID();
 	qint32 getQuantity();
@@ -42,10 +41,10 @@ public:
 	Listings getListings();
 	Recipe getRecipe();
 	QList<CraftingItem*> getComponents();
-	float getOptimalValue();
 	void calculateTree();
-	float calculateCTC();
-	void optimizeTree();
+	float calculateCostToCraft();
+	void setQuantity(qint32 num);
+	qint32 print();
 private:
 	qint32 outputItemID, quantity, vendorValue;
 	//floats due to average price calculations
@@ -58,7 +57,6 @@ private:
 	void setTradingAndVendorValues();
 	void constructIngredientTree();
 	float getListingMethodAvgPrice();
-
 };
 
 #endif // CRAFTINGITEM_H
