@@ -29,9 +29,9 @@ void Gw2ItemDB::init() {
 	QTime t; t.start();
 	//Check if there is an existing database, if there is not, create one
 	QFileInfo dbInfo(path);
+	db = QSqlDatabase::addDatabase("QSQLITE", "ITEMS");
+	db.setDatabaseName(path);
 	if(dbInfo.exists() && dbInfo.isFile()) {
-		db = QSqlDatabase::addDatabase("QSQLITE");
-		db.setDatabaseName(path);
 		loadCache();
 		//if there is something wrong, recreate the db.
 		if(!ready())
@@ -83,7 +83,7 @@ void Gw2ItemDB::create() {
 		nameIDHashMap[item.name] = item.id;
 		idIconUrlHashMap[item.id] = item.iconUrl;
 		idJsonStringHashMap[item.id] = item.jsonString;
-		QSqlQuery q;
+		QSqlQuery q(db);
 		q.prepare("INSERT INTO ITEMS VALUES(:ID,:NAME,:ICONURL,:JSONSTRING);");
 		q.bindValue(":ID", item.id);
 		q.bindValue(":NAME", item.name);
@@ -92,7 +92,7 @@ void Gw2ItemDB::create() {
 		q.exec();
 	}
 	db.commit();
-	db.close();
+	close();
 }
 
 QString Gw2ItemDB::getItemName(qint32 itemID) {
@@ -221,7 +221,7 @@ void Gw2ItemDB::format() {
 	}
 	//If the new databased successfully opened, create the item table
 	if(open()) {
-		QSqlQuery q;
+		QSqlQuery q(db);
 		q.exec(itemsTableScheme);
 	}
 }
@@ -229,8 +229,9 @@ void Gw2ItemDB::format() {
 void Gw2ItemDB::loadCache() {
 	QFileInfo dbInfo(path);
 	if(dbInfo.exists() && dbInfo.isFile() && open()) {
+		QSqlQuery q(db);
 		QSqlQueryModel model;
-		model.setQuery("SELECT * FROM ITEMS");
+		model.setQuery("SELECT * FROM ITEMS", db);
 		//Make sure to load the entire db
 		while(model.canFetchMore())
 			model.fetchMore();

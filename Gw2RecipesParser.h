@@ -15,10 +15,12 @@ public:
 		qint32 recipeID,
 		qint32 outputID,
 		qint32 outputItemCount,
-		QList<QPair<qint32, qint32> > ingredients);
+		QList<QPair<qint32, qint32> > ingredients,
+		QString jsonString);
 	qint32 recipeID, outputID, outputItemCount;
 	//First is itemID, second is quantity
 	QList<QPair<qint32, qint32> > ingredients;
+	QString jsonString;
 	Recipe& operator=(const Recipe &rhs);
 };
 

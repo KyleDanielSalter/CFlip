@@ -23,16 +23,19 @@ Recipe::Recipe(const Recipe &other)
 	, outputID(other.outputID)
 	, outputItemCount(other.outputItemCount)
 	, ingredients(other.ingredients)
+	, jsonString(other.jsonString)
 {}
 
 Recipe::Recipe(qint32 recipeID,
 	qint32 outputID,
 	qint32 outputItemCount,
-	QList<QPair<qint32, qint32> > ingredients)
+	QList<QPair<qint32, qint32> > ingredients,
+	QString jsonString)
 	: recipeID(recipeID)
 	, outputID(outputID)
 	, outputItemCount(outputItemCount)
 	, ingredients(ingredients)
+	, jsonString(jsonString)
 {}
 
 Recipe& Recipe::operator=(const Recipe &rhs) {
@@ -40,6 +43,7 @@ Recipe& Recipe::operator=(const Recipe &rhs) {
 	this->outputID = rhs.outputID;
 	this->outputItemCount = rhs.outputItemCount;
 	this->ingredients = rhs.ingredients;
+	this->jsonString = rhs.jsonString;
 	return *this;
 }
 
@@ -75,7 +79,7 @@ Recipe Gw2RecipesParser::getRecipe(QString recipeID) {
 			QJsonObject iObj = i.toObject();
 			ingredients << QPair<qint32, qint32>(iObj["item_id"].toInt(), iObj["count"].toInt());
 		}
-		return Recipe(jsonObj["id"].toInt(), jsonObj["output_item_id"].toInt(), jsonObj["output_item_count"].toInt(), ingredients);
+		return Recipe(jsonObj["id"].toInt(), jsonObj["output_item_id"].toInt(), jsonObj["output_item_count"].toInt(), ingredients, dataString);
 	} else
 		qDebug() << "Warning! Error getting gw2 recipe for itemIDs: " + recipeID;
 	return Recipe();

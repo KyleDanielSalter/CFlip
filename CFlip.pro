@@ -28,7 +28,9 @@ SOURCES += main.cpp\
     Gw2APIParser.cpp \
     Gw2APIMultiCaller.cpp \
     Gw2APIResult.cpp \
-    MultiListingCaller.cpp
+    MultiListingCaller.cpp \
+    Gw2RecipeDB.cpp \
+    RecipeTree.cpp
 
 HEADERS  += CFlipMainWindow.h \
     Gw2ItemDB.h \
@@ -42,6 +44,8 @@ HEADERS  += CFlipMainWindow.h \
     Gw2APIParser.h \
     Gw2APIMultiCaller.h \
     Gw2APIResult.h \
-    MultiListingCaller.h
+    MultiListingCaller.h \
+    Gw2RecipeDB.h \
+    RecipeTree.h
 
 FORMS    += CFlipMainWindow.ui
