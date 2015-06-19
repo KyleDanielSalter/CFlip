@@ -1,6 +1,6 @@
 #include "RecipeTree.h"
 #include <QDebug>
-#include "Gw2RecipeDB.h"
+#include "Gw2RecipesDB.h"
 #include "Gw2ItemDB.h"
 #include "Gw2ListingsParser.h"
 
@@ -8,32 +8,37 @@ RecipeTreeVertex::RecipeTreeVertex(
 	qint32 outputItemID,
 	qint32 outputQuantityRequired,
 	RecipeTreeVertex *parent)
-	: recipeID(Gw2RecipeDB::getRecipeID(outputItemID))
+	: recipeID(-1)
 	, outputItemID(outputItemID)
 	, outputQuantityRequired(outputQuantityRequired)
 	, parent(parent)
-	, vertexType(NO_TYPE)
-
+	, vertexType(parent == nullptr ? OUTPUT : COMPONENT)
 {
-	//Check if the recipe is in the DB
-	if(recipeID == -1) {
-		//Check if the item has a recipe
+	//Items that have not been recorded need doing so.
+	if(!Gw2RecipesDB::containsOutputItemID(outputItemID)) {
 		recipeID = Gw2RecipesParser::getRecipeID(outputItemID);
+		//If there is a recipe, query the API for it and record it to the DB.
+		//If not, then add the record of the item
 		if(recipeID != -1) {
-			//Add the recipe to the DB
-			recipe = Gw2RecipesParser::getItemRecipe(outputItemID);
-			Gw2RecipeDB::add(recipe.jsonString);
-			constructTree();
-		} else {
-			//No recipe for this item. Either a karma item or a trading post item.
-			if(Gw2ListingsParser::getAPIEndPoint()->checkID(outputItemID))
-				vertexType = TRADING_POST;
-			else
-				vertexType = KARMA;
-		}
+			recipe = Gw2RecipesParser::getRecipe(recipeID);
+			Gw2RecipesDB::add(recipe);
+		} else
+			Gw2RecipesDB::add(outputItemID);
 	} else {
-		recipe = Gw2RecipeDB::getWithRecipeID(recipeID);
+		//An item can be in the db but not have a recipe, therefore need to check
+		recipeID = Gw2RecipesDB::getRecipeID(outputItemID);
+		if(recipeID != -1)
+			recipe = Gw2RecipesDB::getWithRecipeID(recipeID);
+	}
+	//Continue building the tree if this vertex has a recipe
+	//If this item is a leaf, decide its type
+	if(recipeID != -1)
 		constructTree();
+	else {
+		if(Gw2ListingsParser::getAPIEndPoint()->checkID(outputItemID))
+			vertexType = TRADING_POST;
+		else
+			vertexType = KARMA;
 	}
 }
 
@@ -43,7 +48,6 @@ void RecipeTreeVertex::constructTree() {
 		component.first = std::shared_ptr<RecipeTreeVertex>(new RecipeTreeVertex(i.first, i.second, this));
 		components.append(component);
 	}
-	vertexType = COMPONENT;
 }
 
 qint32 RecipeTreeVertex::print() {
