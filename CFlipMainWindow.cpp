@@ -1,6 +1,7 @@
 #include "CFlipMainWindow.h"
 #include "ui_CFlipMainWindow.h"
 #include <qDebug>
+#include <QTime>
 #include "Gw2ItemDB.h"
 #include "Gw2ListingsParser.h"
 #include "Gw2RecipesParser.h"
@@ -14,8 +15,11 @@ CFlipMainWindow::CFlipMainWindow(QWidget *parent) :
 	ui->setupUi(this);
 	Gw2ItemDB::init();
 	Gw2RecipesDB::init();
-	RecipeTreeRoot rTree(12725);
+	QTime t; t.start();
+	RecipeTreeRoot rTree(12720);
+	qDebug("Time elapsed: %d ms", t.elapsed());
 	rTree.print();
+	qDebug() << rTree.findN();
 }
 
 CFlipMainWindow::~CFlipMainWindow() {

@@ -7,8 +7,7 @@
 #include <QPair>
 #include "Gw2API.h"
 
-class Recipe {
-public:
+struct Recipe {
 	Recipe();
 	Recipe(const Recipe &other);
 	Recipe(

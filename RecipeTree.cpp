@@ -8,13 +8,14 @@ RecipeTreeVertex::RecipeTreeVertex(
 	qint32 outputItemID,
 	qint32 outputQuantityRequired,
 	RecipeTreeVertex *parent)
-	: recipeID(-1)
-	, outputItemID(outputItemID)
+	: outputItemID(outputItemID)
 	, outputQuantityRequired(outputQuantityRequired)
 	, parent(parent)
 	, vertexType(parent == nullptr ? OUTPUT : COMPONENT)
 {
 	//Items that have not been recorded need doing so.
+	//Temp recipeID storage variable.
+	qint32 recipeID = -1;
 	if(!Gw2RecipesDB::containsOutputItemID(outputItemID)) {
 		recipeID = Gw2RecipesParser::getRecipeID(outputItemID);
 		//If there is a recipe, query the API for it and record it to the DB.
@@ -79,11 +80,24 @@ qint32 RecipeTreeVertex::print() {
 	return -1;
 }
 
+qint32 RecipeTreeVertex::findN() {
+	if(vertexType == OUTPUT) {
+		for(auto i : components)
+			return i.first->findN();
+	} else if(vertexType == COMPONENT) {
+		qint32 ret = 1;
+		if(outputQuantityRequired % recipe.outputItemCount != 0)
+			ret = lcm(outputQuantityRequired, recipe.outputItemCount) / outputQuantityRequired;
+		for(auto i : components)
+			ret *= i.first->findN();
+		return ret;
+	}
+	return 1;
+}
+
 RecipeTreeRoot::RecipeTreeRoot(qint32 outputItemID)
 	: RecipeTreeVertex(outputItemID, 1)
-{
-	vertexType = OUTPUT;
-}
+{}
 
 RecipeTreeRoot::~RecipeTreeRoot() {
 	components.clear();
@@ -91,4 +105,20 @@ RecipeTreeRoot::~RecipeTreeRoot() {
 
 void RecipeTreeRoot::print() {
 	RecipeTreeVertex::print();
+}
+
+qint32 gcd(qint32 a, qint32 b) {
+	for (;;) {
+		if (a == 0)
+			return b;
+		b %= a;
+		if (b == 0)
+			return a;
+		a %= b;
+	}
+}
+
+qint32 lcm(qint32 a, qint32 b) {
+	int temp = gcd(a, b);
+	return temp ? (a / temp * b) : 0;
 }

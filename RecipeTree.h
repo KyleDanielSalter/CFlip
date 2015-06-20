@@ -18,7 +18,7 @@ struct RecipeTreeVertex {
 		qint32 outputItemID,
 		qint32 outputQuantityRequired,
 		RecipeTreeVertex *parent = nullptr);
-	qint32 recipeID, outputItemID, outputQuantityRequired;
+	qint32 outputItemID, outputQuantityRequired;
 	RecipeTreeVertex *parent;
 	VertexType vertexType;
 	Recipe recipe;
@@ -26,13 +26,17 @@ struct RecipeTreeVertex {
 	QList<QPair<std::shared_ptr<RecipeTreeVertex>, qint32>> components;
 	void constructTree();
 	qint32 print();
+	qint32 findN();
 };
 
-class RecipeTreeRoot : private RecipeTreeVertex {
+class RecipeTreeRoot : public RecipeTreeVertex {
 public:
 	RecipeTreeRoot(qint32 outputItemID);
 	~RecipeTreeRoot();
 	void print();
 };
+
+qint32 gcd(qint32 a, qint32 b);
+qint32 lcm(qint32 a, qint32 b);
 
 #endif // RECIPETREE_H
