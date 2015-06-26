@@ -13,6 +13,25 @@ RecipeTreeVertex::RecipeTreeVertex(
 	, parent(parent)
 	, vertexType(parent == nullptr ? OUTPUT : COMPONENT)
 {
+	init();
+	defaultConstruct();
+}
+
+RecipeTreeVertex::RecipeTreeVertex(
+	qint32 outputItemID,
+	std::function<void (RecipeTreeVertex*)> constructFunc,
+	qint32 outputQuantityRequired,
+	RecipeTreeVertex *parent)
+	: outputItemID(outputItemID)
+	, outputQuantityRequired(outputQuantityRequired)
+	, parent(parent)
+	, vertexType(parent == nullptr ? OUTPUT : COMPONENT)
+{
+	init();
+	constructFunc(this);
+}
+
+void RecipeTreeVertex::init() {
 	//Items that have not been recorded need doing so.
 	//Temp recipeID storage variable.
 	qint32 recipeID = -1;
@@ -33,9 +52,7 @@ RecipeTreeVertex::RecipeTreeVertex(
 	}
 	//Continue building the tree if this vertex has a recipe
 	//If this item is a leaf, decide its type
-	if(recipeID != -1)
-		constructTree();
-	else {
+	if(recipeID ==  -1) {
 		if(Gw2ListingsParser::getAPIEndPoint()->checkID(outputItemID))
 			vertexType = TRADING_POST;
 		else
@@ -43,7 +60,7 @@ RecipeTreeVertex::RecipeTreeVertex(
 	}
 }
 
-void RecipeTreeVertex::constructTree() {
+void RecipeTreeVertex::defaultConstruct() {
 	for(auto i : recipe.ingredients) {
 		QPair<std::shared_ptr<RecipeTreeVertex>, qint32> component;
 		component.first = std::shared_ptr<RecipeTreeVertex>(new RecipeTreeVertex(i.first, i.second, this));
@@ -96,15 +113,11 @@ qint32 RecipeTreeVertex::findN() {
 }
 
 RecipeTreeRoot::RecipeTreeRoot(qint32 outputItemID)
-	: RecipeTreeVertex(outputItemID, 1)
+	: RecipeTreeVertex(outputItemID)
 {}
 
 RecipeTreeRoot::~RecipeTreeRoot() {
 	components.clear();
-}
-
-void RecipeTreeRoot::print() {
-	RecipeTreeVertex::print();
 }
 
 qint32 gcd(qint32 a, qint32 b) {

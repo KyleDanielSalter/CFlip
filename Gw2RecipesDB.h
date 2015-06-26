@@ -18,6 +18,7 @@ public:
 	static qint32 getOutputItemID(qint32 recipeID);
 	static bool containsRecipeID(qint32 recipeID);
 	static bool containsOutputItemID(qint32 outputItemID);
+	static void clear();
 private:
 	static QString path;
 	static QString recipesTableScheme;

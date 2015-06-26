@@ -2,6 +2,7 @@
 #define RECIPETREE_H
 
 #include <memory>
+#include <functional>
 #include <QList>
 #include <QPair>
 #include "Gw2RecipesParser.h"
@@ -16,7 +17,12 @@ struct RecipeTreeVertex {
 	};
 	RecipeTreeVertex(
 		qint32 outputItemID,
-		qint32 outputQuantityRequired,
+		qint32 outputQuantityRequired = 1,
+		RecipeTreeVertex *parent = nullptr);
+	RecipeTreeVertex(
+		qint32 outputItemID,
+		std::function<void (RecipeTreeVertex*)> customConstructFunc,
+		qint32 outputQuantityRequired = 1,
 		RecipeTreeVertex *parent = nullptr);
 	qint32 outputItemID, outputQuantityRequired;
 	RecipeTreeVertex *parent;
@@ -24,8 +30,9 @@ struct RecipeTreeVertex {
 	Recipe recipe;
 	//Second value of pair is quantity required
 	QList<QPair<std::shared_ptr<RecipeTreeVertex>, qint32>> components;
-	void constructTree();
-	qint32 print();
+	void init();
+	void defaultConstruct();
+	virtual qint32 print();
 	qint32 findN();
 };
 
@@ -33,7 +40,6 @@ class RecipeTreeRoot : public RecipeTreeVertex {
 public:
 	RecipeTreeRoot(qint32 outputItemID);
 	~RecipeTreeRoot();
-	void print();
 };
 
 qint32 gcd(qint32 a, qint32 b);

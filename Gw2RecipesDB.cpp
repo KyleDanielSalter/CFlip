@@ -88,6 +88,12 @@ bool Gw2RecipesDB::containsOutputItemID(qint32 outputItemID) {
 	return outputItemIDRecipeIDHash.contains(outputItemID);
 }
 
+void Gw2RecipesDB::clear() {
+	recipeIDOutputItemIDHash.clear();
+	outputItemIDRecipeIDHash.clear();
+	recipeIDRecipeHash.clear();
+}
+
 bool Gw2RecipesDB::open() {
 	if(!db.isOpen()) {
 		db.open();
