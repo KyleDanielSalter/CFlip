@@ -3,33 +3,58 @@
 
 #include <functional>
 #include <QList>
+#include <QHash>
 #include "RecipeTree.h"
 #include "Gw2ListingsParser.h"
 
 struct CraftingTreeVertex : public RecipeTreeVertex {
 	enum CraftType {
-		BUY,
-		CRAFT,
+		BUY,	//Optimal to buy this item
+		CRAFT,	//Optimal to craft this item
 	};
 	CraftingTreeVertex(
 		qint32 outputItemID,
 		std::function<void (RecipeTreeVertex*)> constructFunc,
 		qint32 outputQuantityRequired = 1,
 		RecipeTreeVertex* parent = nullptr);
-	float marketUnitValue, craftCost;
 	CraftType craftType;
+	/*
+	 * craftCount is the number of crafts required.
+	 * If this item is not a component, craftCount will be 0
+	 * quantityReq is the total number of this item required.
+	 */
+	qint32 craftCount, quantityReq,
+	/*
+	 * marketUnitValue is the ppu, totalMarketValue is the ppu * quantityReq
+	 * totalCraftCost is the sum of the value of its children, dependent
+	 * on whether it is more profitable to buy or craft the child.
+	 */
+	marketUnitValue, totalMarketValue, totalCraftCost;
 	Listings marketListings;
-	//overflow.first = outputItemID, overflow.second = quantity
-	void calculateTree(qint32 craftCount, QList<QPair<qint32, qint32>> &overflow);
-	QList<CraftingTreeVertex*> getOverflow();
+	/*
+	 * Adjusts the quantity values of the tree based on the quantity required.
+	 * overflow is the list of items that are not used in the crafting process.
+	 * overflow.first = outputItemID, overflow.second = quantity.
+	 */
+	void setCount(qint32 count, QList<QPair<qint32, qint32>> &overflow);
+	void calculateTree();
 	virtual qint32 print();
+	virtual qint32 profit();
+	//materials.first = itemID, materials.second.first = quantity, materials.second.second = total cost
+	void findShoppingList(QHash<qint32, QPair<qint32, qint32>> &materials);
 };
 
 class CraftingTreeRoot : private CraftingTreeVertex {
 public:
-	CraftingTreeRoot(qint32 outputItemID, qint32 craftCount = 1);
+	CraftingTreeRoot(qint32 outputItemID);
+	CraftingTreeRoot(qint32 outputItemID, qint32 craftCount);
+	void setCount(qint32 count);
+	QList<QPair<qint32, qint32>> getOverflow();
+	void printTree();
+	CraftingTreeVertex* getVertex();
+	qint32 profit();
+	QHash<qint32, QPair<qint32, qint32> > getShoppingList();
 private:
-	qint32 craftCount;
 	QList<QPair<qint32, qint32>> overflow;
 	static void customConstructFunc(RecipeTreeVertex* recipeTreeVertex);
 };

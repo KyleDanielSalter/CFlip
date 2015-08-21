@@ -23,7 +23,7 @@ QHash<qint32, qint32> Gw2RecipesDB::outputItemIDRecipeIDHash;
 QHash<qint32, Recipe> Gw2RecipesDB::recipeIDRecipeHash;
 
 void Gw2RecipesDB::init() {
-	qDebug() << "Initializing Gw2ItemDB...";
+	qDebug() << "Initializing Gw2RecipeDB...";
 	QTime t; t.start();
 	QFileInfo dbInfo(path);
 	db = QSqlDatabase::addDatabase("QSQLITE", "RECIPES");

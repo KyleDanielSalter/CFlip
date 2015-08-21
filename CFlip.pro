@@ -31,7 +31,8 @@ SOURCES += main.cpp\
     MultiListingCaller.cpp \
     RecipeTree.cpp \
     Gw2RecipesDB.cpp \
-    CraftingTree.cpp
+    CraftingTree.cpp \
+    Gw2ListingsManager.cpp
 
 HEADERS  += CFlipMainWindow.h \
     Gw2ItemDB.h \
@@ -48,6 +49,7 @@ HEADERS  += CFlipMainWindow.h \
     MultiListingCaller.h \
     RecipeTree.h \
     Gw2RecipesDB.h \
-    CraftingTree.h
+    CraftingTree.h \
+    Gw2ListingsManager.h
 
 FORMS    += CFlipMainWindow.ui

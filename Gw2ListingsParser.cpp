@@ -88,6 +88,19 @@ Listings Gw2ListingsParser::get(qint32 itemID) {
 	return get(QString::number(itemID));
 }
 
+
+qint32 Listings::getListingFee(qint32 value) {
+	return qRound((float)value * 0.05);
+}
+
+qint32 Listings::getTransactionFee(qint32 value) {
+	return qRound((float)value * 0.1);
+}
+
+qint32 Listings::getTotalFees(qint32 value) {
+	return getListingFee(value) + getTransactionFee(value);
+}
+
 Listings Gw2ListingsParser::get(QString itemID) {
 	singleListingAPIEndPoint.setParams(itemID);
 	QString dataString = singleListingAPIEndPoint.get();

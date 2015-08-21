@@ -64,6 +64,7 @@ void RecipeTreeVertex::defaultConstruct() {
 	for(auto i : recipe.ingredients) {
 		QPair<std::shared_ptr<RecipeTreeVertex>, qint32> component;
 		component.first = std::shared_ptr<RecipeTreeVertex>(new RecipeTreeVertex(i.first, i.second, this));
+		component.second = i.second;
 		components.append(component);
 	}
 }

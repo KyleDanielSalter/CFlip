@@ -8,7 +8,9 @@ QString Gw2Currency::string(qint32 number) {
 	GSC(number, &gold, &silver, &copper);
 	ret += gold == 0 ? "" : QString::number(gold) + "g ";
 	ret += silver == 0 ? "" : QString::number(silver) + "s ";
-	ret += QString::number(copper) + "c";
+	ret += copper == 0 ? "" : QString::number(copper) + "c";
+	if(gold == 0 && silver == 0 && copper == 0)
+		ret += "0c";
 	return ret;
 }
 
