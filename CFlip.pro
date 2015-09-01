@@ -7,7 +7,7 @@
 QT       += core gui
 QT       += network
 QT       += sql
-
+CONFIG += c++11
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -32,7 +32,9 @@ SOURCES += main.cpp\
     RecipeTree.cpp \
     Gw2RecipesDB.cpp \
     CraftingTree.cpp \
-    Gw2ListingsManager.cpp
+    Gw2ListingsManager.cpp \
+    WatchListTabWidget.cpp \
+    WatchListManager.cpp
 
 HEADERS  += CFlipMainWindow.h \
     Gw2ItemDB.h \
@@ -50,6 +52,9 @@ HEADERS  += CFlipMainWindow.h \
     RecipeTree.h \
     Gw2RecipesDB.h \
     CraftingTree.h \
-    Gw2ListingsManager.h
+    Gw2ListingsManager.h \
+    WatchListTabWidget.h \
+    WatchListManager.h
 
-FORMS    += CFlipMainWindow.ui
+FORMS    += CFlipMainWindow.ui \
+    WatchListTabWidget.ui

@@ -12,7 +12,7 @@ class Gw2API : public QObject {
 	Q_OBJECT
 public:
 	Gw2API();
-	Gw2API(QString URI, QString params = QString(), QObject *parent = nullptr);
+    Gw2API(QString URI, QString params = QString(), QObject *parent = NULL);
 	QString get();
 	QUrl getURL();
 	void setParams(QString newParams);

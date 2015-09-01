@@ -1,1 +1,34 @@
-TEST
+watchlist functionality:
+what makes up a watchlist:
+watchlist name
+list of items:
+	icon image
+	item name
+	Cost To Craft
+	adj b/s
+	adj c/s
+How to store watchlists:
+ctc,adj b/s, and adjc/s are dynamic values, no point in storing them
+icon image should be stored in the item database, another column will have to
+be added.
+wathlists technically should be able to ahve the same name, therefolre a
+watchlist id will have to be added
+
+watchlsits will be stored in a json file in the data dir, watchlist.json
+anytime a watchlist change event occurs, the ui will alert the watchlist
+managing class of the event and that class will write to disk.
+
+watchlist managing class:
+loads the json file at initialization, or creates it if it does not
+exist
+once the watchlist is loaded, it will check the item db if we have downlaoded
+its icon before, if not, it will call a database method (maybe called
+downloadImade(qint32 itemID): sotres the blob data, returns the pixelmap?)
+a nested class in the managing class will handle a single instance of a
+watchlist and the containing item info.
+this class will contain the recipetree, as well as the helper methods to
+provide the appropriate data structures to the UI to display the tree
+structures.
+ 
+the watchlsit managing object will contain a hashmap where the key is thge
+watchlistID and the value is the previously watchlist object.

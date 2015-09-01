@@ -1,5 +1,5 @@
 #include "Gw2ListingsParser.h"
-#include <qDebug>
+#include <QDebug>
 #include <utility>
 #include <QJsonDocument>
 #include <QJsonArray>

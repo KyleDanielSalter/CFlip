@@ -89,7 +89,7 @@ qint32 RecipeTreeVertex::print() {
 		case TRADING_POST:
 			text += " TRADING_POST"; break;
 	}
-	qDebug() << text;
+    qDebug().nospace() << text;
 	tab++;
 	for(auto i : components)
 		tab += i.first->print();

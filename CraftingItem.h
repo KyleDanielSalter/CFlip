@@ -49,8 +49,8 @@ private:
 	qint32 outputItemID, quantity, vendorValue;
 	//floats due to average price calculations
 	float costToCraft, avgPrice;
-	ItemType type;
 	OrderType buyMethod, sellMethod;
+    ItemType type;
 	Listings listings;
 	Recipe recipe;
 	QList<CraftingItem*> components;

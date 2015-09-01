@@ -1,6 +1,7 @@
 #include "CFlipMainWindow.h"
 #include "ui_CFlipMainWindow.h"
-#include <qDebug>
+#include "WatchListTabWidget.h"
+#include <QDebug>
 #include <QTime>
 #include "Gw2Currency.h"
 #include "Gw2ItemDB.h"
@@ -29,9 +30,8 @@ CFlipMainWindow::~CFlipMainWindow() {
 
 void CFlipMainWindow::on_watchListTab_tabBarClicked(int index)
 {
-
-}
-
-void CFlipMainWindow::on_pushButton_clicked()
-{
+	if(index == ui->watchListTab->count() - 1) {
+		ui->watchListTab->insertTab(index, new WatchListTabWidget("TEST", {1,2,3,4}), "TEST");
+		ui->watchListTab->setCurrentIndex(index - 1);
+	}
 }

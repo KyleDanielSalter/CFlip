@@ -7,9 +7,6 @@
 #include <QNetworkReply>
 #include <QEventLoop>
 
-ImageDownloader::ImageDownloader(QObject *parent)
-	: QObject(parent)
-{}
 
 QPixmap ImageDownloader::get(QString url) {
 	return QPixmap(getImageAsByteArray(url));

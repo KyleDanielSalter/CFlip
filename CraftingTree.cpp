@@ -123,7 +123,7 @@ qint32 CraftingTreeVertex::print() {
 		text += vertexType == KARMA ? " KARMA" : " BUY " + Gw2Currency::string(totalMarketValue);
 	} else
 		text += " CRAFT " + Gw2Currency::string(totalCraftCost);
-	qDebug() << text;
+    qDebug().noquote() << text;
 	tab++;
 	for(auto i : components)
 		tab += i.first->print();
@@ -132,7 +132,7 @@ qint32 CraftingTreeVertex::print() {
 	return -1;
 }
 
-qint32 CraftingTreeVertex::profit() {
+qint32 CraftingTreeVertex::getProfit() {
 	if(vertexType == COMPONENT || vertexType == OUTPUT) {
 		return totalMarketValue - (totalCraftCost + Listings::getTotalFees(totalMarketValue));
 	}
@@ -196,8 +196,8 @@ void CraftingTreeRoot::printTree() {
 	text += "\nMarket Value: " + Gw2Currency::string(totalMarketValue) + "\n";
 	text += "Listing and Transaction Fee: " + Gw2Currency::string(Listings::getTotalFees(totalMarketValue)) + "\n";
 	text += "Crafting Cost Total: " + Gw2Currency::string(total) + "\n";
-	text += "Profit: " + Gw2Currency::string(profit());
-	qDebug() << text;
+	text += "Profit: " + Gw2Currency::string(getProfit());
+    qDebug().noquote() << text;
 }
 
 CraftingTreeVertex* CraftingTreeRoot::getVertex() {
@@ -213,8 +213,13 @@ void CraftingTreeRoot::customConstructFunc(RecipeTreeVertex* recipeTreeVertex){
 	}
 }
 
-qint32 CraftingTreeRoot::profit() {
-	qint32 ret = CraftingTreeVertex::profit();
+qint32 CraftingTreeRoot::getAdjBS() {
+	qint32 unAdjBS = marketListings.getBoundaryPrice(Listings::SELLS) * quantityReq - marketListings.getBoundaryPrice(Listings::BUYS) * quantityReq;
+	return unAdjBS - Listings::getTotalFees(unAdjBS);
+}
+
+qint32 CraftingTreeRoot::getProfit() {
+	qint32 ret = CraftingTreeVertex::getProfit();
 	qint32 overflowValue = 0;
 	for(auto i : overflow) {
 		Listings overflowListings = Gw2ListingsManager::get(i.first);

@@ -31,7 +31,7 @@ struct CraftingTreeVertex : public RecipeTreeVertex {
 	 */
 	marketUnitValue, totalMarketValue, totalCraftCost;
 	Listings marketListings;
-	/*
+	/*-
 	 * Adjusts the quantity values of the tree based on the quantity required.
 	 * overflow is the list of items that are not used in the crafting process.
 	 * overflow.first = outputItemID, overflow.second = quantity.
@@ -39,7 +39,7 @@ struct CraftingTreeVertex : public RecipeTreeVertex {
 	void setCount(qint32 count, QList<QPair<qint32, qint32>> &overflow);
 	void calculateTree();
 	virtual qint32 print();
-	virtual qint32 profit();
+	virtual qint32 getProfit();
 	//materials.first = itemID, materials.second.first = quantity, materials.second.second = total cost
 	void findShoppingList(QHash<qint32, QPair<qint32, qint32>> &materials);
 };
@@ -52,7 +52,9 @@ public:
 	QList<QPair<qint32, qint32>> getOverflow();
 	void printTree();
 	CraftingTreeVertex* getVertex();
-	qint32 profit();
+	qint32 getAdjBS();
+	//AKA get AdjB/S
+	qint32 getProfit();
 	QHash<qint32, QPair<qint32, qint32> > getShoppingList();
 private:
 	QList<QPair<qint32, qint32>> overflow;

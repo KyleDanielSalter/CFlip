@@ -1,10 +1,13 @@
 #ifndef CFLIPMAINWINDOW_H
 #define CFLIPMAINWINDOW_H
 
+#include <memory>
 #include <QMainWindow>
+#include <QList>
 
 namespace Ui {
 	class CFlipMainWindow;
+	class WatchListTabWidget;
 }
 
 class CFlipMainWindow : public QMainWindow {
@@ -16,10 +19,9 @@ public:
 private slots:
 	void on_watchListTab_tabBarClicked(int index);
 
-	void on_pushButton_clicked();
-
 private:
 	Ui::CFlipMainWindow *ui;
+	QList<std::shared_ptr<Ui::WatchListTabWidget>> watchListTabWidgetList;
 };
 
 #endif // CFLIPMAINWINDOW_H
