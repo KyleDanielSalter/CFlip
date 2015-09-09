@@ -1,32 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>WatchListTabWidget</class>
- <widget class="QWidget" name="WatchListTabWidget">
+ <class>WatchlistTabWidget</class>
+ <widget class="QWidget" name="WatchlistTabWidget">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>742</width>
+    <width>878</width>
     <height>443</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <widget class="QTableWidget" name="tableWidget">
+  <widget class="QTableWidget" name="watchlistTable">
    <property name="geometry">
     <rect>
      <x>10</x>
      <y>10</y>
-     <width>521</width>
+     <width>421</width>
      <height>391</height>
     </rect>
    </property>
-   <column>
-    <property name="text">
-     <string>Icon</string>
-    </property>
-   </column>
+   <property name="contextMenuPolicy">
+    <enum>Qt::CustomContextMenu</enum>
+   </property>
+   <property name="editTriggers">
+    <set>QAbstractItemView::NoEditTriggers</set>
+   </property>
+   <property name="dragDropOverwriteMode">
+    <bool>false</bool>
+   </property>
+   <property name="alternatingRowColors">
+    <bool>true</bool>
+   </property>
    <column>
     <property name="text">
      <string>Item Name</string>
@@ -48,7 +55,7 @@
     </property>
    </column>
   </widget>
-  <widget class="QPushButton" name="pushButton">
+  <widget class="QPushButton" name="addNewItemButton">
    <property name="geometry">
     <rect>
      <x>10</x>
@@ -61,7 +68,7 @@
     <string>Add New Item</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="pushButton_2">
+  <widget class="QPushButton" name="startBatchButton">
    <property name="geometry">
     <rect>
      <x>110</x>
@@ -77,15 +84,25 @@
   <widget class="QTreeWidget" name="treeWidget">
    <property name="geometry">
     <rect>
-     <x>540</x>
+     <x>440</x>
      <y>10</y>
-     <width>191</width>
+     <width>421</width>
      <height>391</height>
     </rect>
    </property>
    <column>
     <property name="text">
-     <string>Crafting Tree</string>
+     <string>Item Name</string>
+    </property>
+   </column>
+   <column>
+    <property name="text">
+     <string>Type</string>
+    </property>
+   </column>
+   <column>
+    <property name="text">
+     <string>Cost</string>
     </property>
    </column>
   </widget>

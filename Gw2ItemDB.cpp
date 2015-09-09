@@ -42,6 +42,7 @@ void Gw2ItemDB::init() {
 }
 
 void Gw2ItemDB::clear() {
+	close();
 	idNameHashMap.clear();
 	nameIDHashMap.clear();
 	idIconUrlHashMap.clear();

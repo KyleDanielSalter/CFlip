@@ -33,8 +33,8 @@ SOURCES += main.cpp\
     Gw2RecipesDB.cpp \
     CraftingTree.cpp \
     Gw2ListingsManager.cpp \
-    WatchListTabWidget.cpp \
-    WatchListManager.cpp
+    WatchlistManager.cpp \
+    WatchlistTabWidget.cpp
 
 HEADERS  += CFlipMainWindow.h \
     Gw2ItemDB.h \
@@ -53,8 +53,8 @@ HEADERS  += CFlipMainWindow.h \
     Gw2RecipesDB.h \
     CraftingTree.h \
     Gw2ListingsManager.h \
-    WatchListTabWidget.h \
-    WatchListManager.h
+    WatchlistManager.h \
+    WatchlistTabWidget.h
 
 FORMS    += CFlipMainWindow.ui \
-    WatchListTabWidget.ui
+    WatchlistTabWidget.ui

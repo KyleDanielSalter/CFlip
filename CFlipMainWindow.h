@@ -3,11 +3,9 @@
 
 #include <memory>
 #include <QMainWindow>
-#include <QList>
 
 namespace Ui {
 	class CFlipMainWindow;
-	class WatchListTabWidget;
 }
 
 class CFlipMainWindow : public QMainWindow {
@@ -15,13 +13,11 @@ class CFlipMainWindow : public QMainWindow {
 public:
 	explicit CFlipMainWindow(QWidget *parent = 0);
 	~CFlipMainWindow();
-
 private slots:
-	void on_watchListTab_tabBarClicked(int index);
-
+	void on_watchListTab_tabCloseRequested(int index);
+	void on_actionNew_Watchlist_triggered();
 private:
 	Ui::CFlipMainWindow *ui;
-	QList<std::shared_ptr<Ui::WatchListTabWidget>> watchListTabWidgetList;
 };
 
 #endif // CFLIPMAINWINDOW_H

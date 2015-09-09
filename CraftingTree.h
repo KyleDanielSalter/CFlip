@@ -7,6 +7,8 @@
 #include "RecipeTree.h"
 #include "Gw2ListingsParser.h"
 
+class QTreeWidgetItem;
+
 struct CraftingTreeVertex : public RecipeTreeVertex {
 	enum CraftType {
 		BUY,	//Optimal to buy this item
@@ -31,7 +33,7 @@ struct CraftingTreeVertex : public RecipeTreeVertex {
 	 */
 	marketUnitValue, totalMarketValue, totalCraftCost;
 	Listings marketListings;
-	/*-
+	/*
 	 * Adjusts the quantity values of the tree based on the quantity required.
 	 * overflow is the list of items that are not used in the crafting process.
 	 * overflow.first = outputItemID, overflow.second = quantity.
@@ -40,6 +42,8 @@ struct CraftingTreeVertex : public RecipeTreeVertex {
 	void calculateTree();
 	virtual qint32 print();
 	virtual qint32 getProfit();
+	void buildQTree(QTreeWidgetItem *parentItem);
+	QStringList getTreeColumns();
 	//materials.first = itemID, materials.second.first = quantity, materials.second.second = total cost
 	void findShoppingList(QHash<qint32, QPair<qint32, qint32>> &materials);
 };
@@ -52,9 +56,11 @@ public:
 	QList<QPair<qint32, qint32>> getOverflow();
 	void printTree();
 	CraftingTreeVertex* getVertex();
+	qint32 getCostToCraft();
 	qint32 getAdjBS();
-	//AKA get AdjB/S
+	//AKA get AdjC/S
 	qint32 getProfit();
+	std::shared_ptr<QTreeWidgetItem> getQTree();
 	QHash<qint32, QPair<qint32, qint32> > getShoppingList();
 private:
 	QList<QPair<qint32, qint32>> overflow;

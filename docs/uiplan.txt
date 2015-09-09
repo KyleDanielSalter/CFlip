@@ -32,3 +32,30 @@ structures.
  
 the watchlsit managing object will contain a hashmap where the key is thge
 watchlistID and the value is the previously watchlist object.
+
+adding watchlists:
+
+after some research into the qt ui docs, new way to set this up:
+each watchlist will be a QWidget object, loads the base Ui form on creation
+the main window new tab event will call a method in the watchlist managing
+class that will return a reference to that newly made qwidget
+the managing class is not responsible for interacting directly with those
+qwidgets, only for storing them in memory, and reading/writing from disk.
+the managing class will be composed in the main class
+
+WatchListTabManager:
+public:
+constructor: load json data into memory
+destructor: writes json
+QList<WatchListTabWidget*> get(): returns a list of watchlist references that
+the main class can use to insert into the tab widget
+private:
+QList<std::shared_ptr<WatchListTabWidget>> watchListTabList;
+read(): clears the watchlisttablist and reads the json file
+write(): writes the watchlist list name and item names to the json file
+NOTE: will a watchlist id be necessary? order should be preserved without
+needing ids
+
+WatchListTabWidget:
+constructor: takes a watchlist name and a list of item ids, uses the id to
+fetch the necessary data from the other program modules

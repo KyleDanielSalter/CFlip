@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>742</width>
+    <width>872</width>
     <height>521</height>
    </rect>
   </property>
@@ -25,7 +25,7 @@
      <rect>
       <x>0</x>
       <y>10</y>
-      <width>801</width>
+      <width>861</width>
       <height>501</height>
      </rect>
     </property>
@@ -68,22 +68,14 @@ QTabBar::tab:!selected {
 }</string>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>-1</number>
     </property>
     <property name="tabsClosable">
-     <bool>false</bool>
+     <bool>true</bool>
     </property>
     <property name="tabBarAutoHide">
      <bool>false</bool>
     </property>
-    <widget class="QWidget" name="tab_2">
-     <property name="enabled">
-      <bool>false</bool>
-     </property>
-     <attribute name="title">
-      <string>+</string>
-     </attribute>
-    </widget>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">
@@ -91,7 +83,7 @@ QTabBar::tab:!selected {
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>742</width>
+     <width>872</width>
      <height>23</height>
     </rect>
    </property>
@@ -99,16 +91,16 @@ QTabBar::tab:!selected {
     <property name="title">
      <string>File</string>
     </property>
-   </widget>
-   <widget class="QMenu" name="menuOptions">
-    <property name="title">
-     <string>Options</string>
-    </property>
+    <addaction name="actionNew_Watchlist"/>
    </widget>
    <addaction name="menuFile"/>
-   <addaction name="menuOptions"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
+  <action name="actionNew_Watchlist">
+   <property name="text">
+    <string>New Watchlist...</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources/>

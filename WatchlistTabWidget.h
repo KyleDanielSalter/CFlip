@@ -8,33 +8,46 @@
 #include "CraftingTree.h"
 
 class QTableWidgetItem;
+class QTreeWidgetItem;
+
 namespace Ui {
-	class WatchListTabWidget;
+	class WatchlistTabWidget;
 }
 
-class WatchListTabWidget : public QWidget {
+class WatchlistTabWidget : public QWidget {
     Q_OBJECT
 public:
-	explicit WatchListTabWidget(
+	explicit WatchlistTabWidget(
 		QString name,
-		QList<qint32> itemIDs,
+		QList<qint32> itemIDs = QList<qint32>(),
 		QWidget *parent = 0);
-    ~WatchListTabWidget();
+	~WatchlistTabWidget();
 	void add(qint32 itemID);
 	void remove(qint32 itemID);
+	QString getName();
+	QList<qint32> getItemIDs();
+private slots:
+	void on_addNewItemButton_clicked();
+	void on_watchlistTable_cellClicked(int row, int column);
+	void on_watchlistTable_customContextMenuRequested(const QPoint &pos);
+
 private:
 	struct WatchlistRow {
 		WatchlistRow(qint32 itemID);
 		qint32 itemID;
-		//Order is Icon, Item Name, Adj B/S, Adj C/S
+		//Order is Item Name, CTC, Adj B/S, Adj C/S
 		QList<std::shared_ptr<QTableWidgetItem>> tableItems;
 		CraftingTreeRoot craftingTree;
+		std::shared_ptr<QTreeWidgetItem> treeItem;
 	};
-    Ui::WatchListTabWidget *ui;
+	Ui::WatchlistTabWidget *ui;
 	QString name;
-	QList<qint32> itemIDs;
 	QList<WatchlistRow> tableRows;
-	void init();
+	void init(QList<qint32> itemIDs);
+	void addRowToTable(WatchlistRow &row);
+	qint32 findIndex(qint32 itemID);
+	void setTreeWidgetItem(QTreeWidgetItem *treeItem);
+	void expandCraftTreeWidgetItems(QTreeWidgetItem *item);
 };
 
 #endif // WATCHLISTTABWIDGET_H

@@ -1,5 +1,6 @@
 #include "RecipeTree.h"
 #include <QDebug>
+#include <QTreeWidgetItem>
 #include "Gw2RecipesDB.h"
 #include "Gw2ItemDB.h"
 #include "Gw2ListingsParser.h"

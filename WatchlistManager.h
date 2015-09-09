@@ -4,17 +4,21 @@
 #include <memory>
 #include <QList>
 #include <QString>
-#include "WatchListTabWidget.h"
 
-class WatchListManager {
+class WatchlistTabWidget;
+
+class WatchlistManager {
 public:
-	static void init();
-	static QList<WatchListTabWidget*> get();
+	static QList<WatchlistTabWidget*> init();
+	static void clear();
+	static QList<WatchlistTabWidget*> get();
+	static WatchlistTabWidget* add(QString name);
+	static void remove(WatchlistTabWidget* tab);
 private:
 	static QString watchlistJsonPath;
-	static QList<std::shared_ptr<WatchListTabWidget>> watchlistTabList;
-	void read();
-	void write();
+	static QList<std::shared_ptr<WatchlistTabWidget>> watchlistTabList;
+	static void read();
+	static void write();
 };
 
 #endif // WATCHLISTMANAGER_H

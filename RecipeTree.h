@@ -7,6 +7,8 @@
 #include <QPair>
 #include "Gw2RecipesParser.h"
 
+class QTreeWidgetItem;
+
 struct RecipeTreeVertex {
 	enum VertexType {
 		NO_TYPE,
