@@ -1,0 +1,9 @@
+{
+	"Watchlists": [
+		{
+			"name" : <name>
+			"itemIDs" : [...]
+		}
+		...
+	]
+}

@@ -7,12 +7,22 @@
 #include <QList>
 #include "CraftingTree.h"
 
+class BatchWindow;
 class QTableWidgetItem;
 class QTreeWidgetItem;
 
 namespace Ui {
 	class WatchlistTabWidget;
 }
+
+struct WatchlistRow {
+	WatchlistRow(qint32 itemID);
+	qint32 itemID;
+	//Order is Item Name, CTC, Adj B/S, Adj C/S
+	QList<std::shared_ptr<QTableWidgetItem>> tableItems;
+	CraftingTreeRoot craftingTree;
+	std::shared_ptr<QTreeWidgetItem> treeItem;
+};
 
 class WatchlistTabWidget : public QWidget {
     Q_OBJECT
@@ -30,16 +40,8 @@ private slots:
 	void on_addNewItemButton_clicked();
 	void on_watchlistTable_cellClicked(int row, int column);
 	void on_watchlistTable_customContextMenuRequested(const QPoint &pos);
-
+	void on_startBatchButton_clicked();
 private:
-	struct WatchlistRow {
-		WatchlistRow(qint32 itemID);
-		qint32 itemID;
-		//Order is Item Name, CTC, Adj B/S, Adj C/S
-		QList<std::shared_ptr<QTableWidgetItem>> tableItems;
-		CraftingTreeRoot craftingTree;
-		std::shared_ptr<QTreeWidgetItem> treeItem;
-	};
 	Ui::WatchlistTabWidget *ui;
 	QString name;
 	QList<WatchlistRow> tableRows;

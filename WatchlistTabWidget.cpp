@@ -7,9 +7,29 @@
 #include <QTreeWidgetItem>
 #include <QAction>
 #include <QMenu>
+#include "BatchWindow.h"
 #include "Gw2ItemDB.h"
 #include "ImageDownloader.h"
 #include "Gw2Currency.h"
+
+WatchlistRow::WatchlistRow(qint32 itemID)
+	: itemID(itemID)
+	, craftingTree(itemID)
+	, treeItem(craftingTree.getQTree())
+{
+	QString itemName(Gw2ItemDB::getItemName(itemID)),
+		costToCraft(Gw2Currency::string(craftingTree.getVertex()->totalCraftCost)),
+		adjBS(Gw2Currency::string(craftingTree.getAdjBS())),
+		adjCS(Gw2Currency::string(craftingTree.getProfit()));
+	std::shared_ptr<QTableWidgetItem> itemNameTableItem(new QTableWidgetItem(itemName, 0)),
+		costToCraftTableItem(new QTableWidgetItem(costToCraft, 0)),
+		adjBSTableItem(new QTableWidgetItem(adjBS, 0)),
+		adjCSTableItem(new QTableWidgetItem(adjCS, 0));
+	tableItems << itemNameTableItem;
+	tableItems << costToCraftTableItem;
+	tableItems << adjBSTableItem;
+	tableItems << adjCSTableItem;
+}
 
 WatchlistTabWidget::WatchlistTabWidget(
 	QString name,
@@ -40,6 +60,8 @@ void WatchlistTabWidget::remove(qint32 itemID) {
 	if(index != -1) {
 		tableRows.removeAt(index);
 		ui->watchlistTable->removeRow(index);
+		while(ui->treeWidget->topLevelItemCount() > 0)
+			ui->treeWidget->takeTopLevelItem(0);
 	}
 }
 
@@ -64,25 +86,6 @@ void WatchlistTabWidget::on_addNewItemButton_clicked() {
 		else
 			QMessageBox::warning(this, "Invalid Item Name", "The entered item name does not exist.");
 	}
-}
-
-WatchlistTabWidget::WatchlistRow::WatchlistRow(qint32 itemID)
-	: itemID(itemID)
-	, craftingTree(itemID)
-	, treeItem(craftingTree.getQTree())
-{
-	QString itemName(Gw2ItemDB::getItemName(itemID)),
-		costToCraft(Gw2Currency::string(craftingTree.getCostToCraft())),
-		adjBS(Gw2Currency::string(craftingTree.getAdjBS())),
-		adjCS(Gw2Currency::string(craftingTree.getProfit()));
-	std::shared_ptr<QTableWidgetItem> itemNameTableItem(new QTableWidgetItem(itemName, 0)),
-		costToCraftTableItem(new QTableWidgetItem(costToCraft, 0)),
-		adjBSTableItem(new QTableWidgetItem(adjBS, 0)),
-		adjCSTableItem(new QTableWidgetItem(adjCS, 0));
-	tableItems << itemNameTableItem;
-	tableItems << costToCraftTableItem;
-	tableItems << adjBSTableItem;
-	tableItems << adjCSTableItem;
 }
 
 void WatchlistTabWidget::init(QList<qint32> itemIDs) {
@@ -133,7 +136,7 @@ void WatchlistTabWidget::on_watchlistTable_customContextMenuRequested(const QPoi
 	if(ui->watchlistTable->itemAt(pos) != 0) {
 		QMenu rightClickMenu(ui->watchlistTable);
 		rightClickMenu.addAction("Remove Item");
-		QPoint globalPos = ui->watchlistTable->mapToGlobal(pos);
+		QPoint globalPos = ui->watchlistTable->viewport()->mapToGlobal(pos);
 		QAction *removeAction = rightClickMenu.exec(globalPos);
 		if(removeAction) {
 			QTableWidgetItem *clickedItem = ui->watchlistTable->itemAt(pos);
@@ -141,4 +144,10 @@ void WatchlistTabWidget::on_watchlistTable_customContextMenuRequested(const QPoi
 			remove(tableRows[row].itemID);
 		}
 	}
+}
+
+void WatchlistTabWidget::on_startBatchButton_clicked()
+{
+	BatchWindow *newBatch = new BatchWindow(tableRows, parentWidget());
+	newBatch->show();
 }

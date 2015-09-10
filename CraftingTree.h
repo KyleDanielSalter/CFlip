@@ -39,6 +39,8 @@ struct CraftingTreeVertex : public RecipeTreeVertex {
 	 * overflow.first = outputItemID, overflow.second = quantity.
 	 */
 	void setCount(qint32 count, QList<QPair<qint32, qint32>> &overflow);
+	qint32 getCraftCount();
+	qint32 getCraftCount(QList<QPair<qint32, qint32>> &countList);
 	void calculateTree();
 	virtual qint32 print();
 	virtual qint32 getProfit();
@@ -56,7 +58,6 @@ public:
 	QList<QPair<qint32, qint32>> getOverflow();
 	void printTree();
 	CraftingTreeVertex* getVertex();
-	qint32 getCostToCraft();
 	qint32 getAdjBS();
 	//AKA get AdjC/S
 	qint32 getProfit();

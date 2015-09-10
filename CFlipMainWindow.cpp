@@ -50,5 +50,5 @@ void CFlipMainWindow::on_actionNew_Watchlist_triggered()
 	bool ok;
 	QString name = QInputDialog::getText(this, tr("Enter New Watchlist Name"), tr("Watchlist Name:"),QLineEdit::Normal, "Untitled Watchlist", &ok);
 	if(ok)
-		ui->watchListTab->insertTab(ui->watchListTab->count() - 1, WatchlistManager::add(name), name);
+		ui->watchListTab->insertTab(ui->watchListTab->count(), WatchlistManager::add(name), name);
 }

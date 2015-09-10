@@ -34,7 +34,8 @@ SOURCES += main.cpp\
     CraftingTree.cpp \
     Gw2ListingsManager.cpp \
     WatchlistManager.cpp \
-    WatchlistTabWidget.cpp
+    WatchlistTabWidget.cpp \
+    BatchWindow.cpp
 
 HEADERS  += CFlipMainWindow.h \
     Gw2ItemDB.h \
@@ -54,7 +55,9 @@ HEADERS  += CFlipMainWindow.h \
     CraftingTree.h \
     Gw2ListingsManager.h \
     WatchlistManager.h \
-    WatchlistTabWidget.h
+    WatchlistTabWidget.h \
+    BatchWindow.h
 
 FORMS    += CFlipMainWindow.ui \
-    WatchlistTabWidget.ui
+    WatchlistTabWidget.ui \
+    BatchWindow.ui

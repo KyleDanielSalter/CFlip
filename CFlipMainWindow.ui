@@ -73,6 +73,9 @@ QTabBar::tab:!selected {
     <property name="tabsClosable">
      <bool>true</bool>
     </property>
+    <property name="movable">
+     <bool>true</bool>
+    </property>
     <property name="tabBarAutoHide">
      <bool>false</bool>
     </property>

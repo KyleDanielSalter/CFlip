@@ -21,7 +21,6 @@ public:
 	static QHash<QString, qint32> getNameIDHashMap();
 	static QHash<qint32, QString> getIDIconUrlHashMap();
 	static QHash<qint32, QString> getIDJsonDataStringHashMap();
-
 private:
 	static QString path;
 	static QString itemsTableScheme;
@@ -30,7 +29,6 @@ private:
 	static QHash<QString, qint32> nameIDHashMap;
 	static QHash<qint32, QString> idIconUrlHashMap;
 	static QHash<qint32, QString> idJsonStringHashMap;
-
 	static bool open();
 	static bool close();
 	static bool ready();

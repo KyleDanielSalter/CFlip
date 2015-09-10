@@ -1,0 +1,20 @@
+Following the UI setup in uimockup2.png, there will be three main sections in
+the window.
+
+Watchlist Items:
+-A table of 3 columns, Item Name, Craft Cost, and # Crafts
+Note: a fourth column may be necessary for an integer spinner to change the
+quantity desired of the items
+-Similar right click menu to the watchlist tab that can remove entries from the
+table.
+
+Shopping List:
+-Table containing the columns: Item Name, Amount, Price. Is filled in according 
+to the contents in the watchlsit items table, and adjusts to changes in that table.
+-A secondary, smaller table should be beneath for overflow items with columns: Item Name, Parent Item, Amount, Cost, Profit. This amount of detail might not be needed.
+
+Commit Window:
+Clarification on this window is needed from Calvin. Contains the estimated
+total cost and profit from the entire batch, the commit button commits to 
+local history db? I predict the alpha features of the program will stop there,
+and the planned Transaction API features integreated with this button.

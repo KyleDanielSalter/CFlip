@@ -6,10 +6,12 @@
 #include <QJsonObject>
 #include "WatchlistTabWidget.h"
 
+QWidget* WatchlistManager::parent;
 QString WatchlistManager::watchlistJsonPath = "data/watchlist.json";
 QList<std::shared_ptr<WatchlistTabWidget>> WatchlistManager::watchlistTabList;
 
-QList<WatchlistTabWidget *> WatchlistManager::init() {
+QList<WatchlistTabWidget *> WatchlistManager::init(QWidget *parent) {
+	parent = parent;
 	read();
 	return get();
 }
@@ -55,7 +57,7 @@ void WatchlistManager::read() {
 		QList<qint32> itemIDs;
 		for(auto innerIter : jsonItemIDArray)
 			itemIDs << innerIter.toInt();
-		std::shared_ptr<WatchlistTabWidget> newTab(new WatchlistTabWidget(watchlistName, itemIDs));
+		std::shared_ptr<WatchlistTabWidget> newTab(new WatchlistTabWidget(watchlistName, itemIDs, parent));
 		watchlistTabList.append(newTab);
 	}
 }

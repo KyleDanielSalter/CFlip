@@ -61,6 +61,25 @@ void CraftingTreeVertex::setCount(qint32 count, QList<QPair<qint32, qint32>> &ov
 	}
 }
 
+qint32 CraftingTreeVertex::getCraftCount() {
+	qint32 ret = craftCount;
+	for(auto i : components) {
+		CraftingTreeVertex* next = static_cast<CraftingTreeVertex*>(i.first.get());
+		ret += next->craftType == CRAFT ? next->getCraftCount() : 0;
+	}
+	return ret;
+}
+
+qint32 CraftingTreeVertex::getCraftCount(QList<QPair<qint32, qint32>> &countList) {
+	qint32 ret = craftCount;
+	countList << QPair<qint32, qint32>(outputItemID, craftCount);
+	for(auto i : components) {
+		CraftingTreeVertex* next = static_cast<CraftingTreeVertex*>(i.first.get());
+		ret += next->getCraftCount(countList);
+	}
+	return ret;
+}
+
 void CraftingTreeVertex::calculateTree() {
 	//Calculate the market value based on the quantity required (n/a for output)
 	//Note: KARMA items are 0 value items
@@ -232,12 +251,8 @@ void CraftingTreeRoot::customConstructFunc(RecipeTreeVertex* recipeTreeVertex){
 	}
 }
 
-qint32 CraftingTreeRoot::getCostToCraft() {
-	return totalCraftCost;
-}
-
 qint32 CraftingTreeRoot::getAdjBS() {
-	qint32 unAdjBS = marketListings.getBoundaryPrice(Listings::SELLS) * quantityReq - marketListings.getBoundaryPrice(Listings::BUYS) * quantityReq;
+	qint32 unAdjBS = totalMarketValue - marketListings.getBoundaryPrice(Listings::BUYS) * quantityReq;
 	return unAdjBS - Listings::getTotalFees(unAdjBS);
 }
 
@@ -255,9 +270,8 @@ std::shared_ptr<QTreeWidgetItem> CraftingTreeRoot::getQTree()
 {
 	std::shared_ptr<QTreeWidgetItem> ret(new QTreeWidgetItem(0));
 	QStringList cols = getTreeColumns();
-	ret->setText(0, cols[0]);
-	ret->setText(1, cols[1]);
-	ret->setText(2, cols[2]);
+	for(qint32 i = 0; i < cols.size(); ++i)
+		ret->setText(i, cols[i]);
 	for(auto i : components) {
 		CraftingTreeVertex* next = static_cast<CraftingTreeVertex*>(i.first.get());
 		next->buildQTree(ret.get());
