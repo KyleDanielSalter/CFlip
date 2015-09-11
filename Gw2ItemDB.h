@@ -24,7 +24,7 @@ public:
 private:
 	static QString path;
 	static QString itemsTableScheme;
-	static QSqlDatabase db;
+	static QString databaseName;
 	static QHash<qint32, QString> idNameHashMap;
 	static QHash<QString, qint32> nameIDHashMap;
 	static QHash<qint32, QString> idIconUrlHashMap;

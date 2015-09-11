@@ -22,12 +22,12 @@ public:
 private:
 	static QString path;
 	static QString recipesTableScheme;
-	static QSqlDatabase db;
+	static QString databaseName;
 	static QHash<qint32, qint32> recipeIDOutputItemIDHash;
 	static QHash<qint32, qint32> outputItemIDRecipeIDHash;
 	static QHash<qint32, Recipe> recipeIDRecipeHash;
 	static bool open();
-	static bool close();
+	static void close();
 	static void load();
 	//Should only be called for a new record so the hashes do not repeat.
 	static bool write(

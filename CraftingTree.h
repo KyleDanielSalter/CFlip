@@ -44,8 +44,6 @@ struct CraftingTreeVertex : public RecipeTreeVertex {
 	void calculateTree();
 	virtual qint32 print();
 	virtual qint32 getProfit();
-	void buildQTree(QTreeWidgetItem *parentItem);
-	QStringList getTreeColumns();
 	//materials.first = itemID, materials.second.first = quantity, materials.second.second = total cost
 	void findShoppingList(QHash<qint32, QPair<qint32, qint32>> &materials);
 };
@@ -61,9 +59,9 @@ public:
 	qint32 getAdjBS();
 	//AKA get AdjC/S
 	qint32 getProfit();
-	std::shared_ptr<QTreeWidgetItem> getQTree();
-	QHash<qint32, QPair<qint32, qint32> > getShoppingList();
+	QHash<qint32, QPair<qint32, qint32>> getShoppingList();
 private:
+	//first = itemID, second = quantity
 	QList<QPair<qint32, qint32>> overflow;
 	static void customConstructFunc(RecipeTreeVertex* recipeTreeVertex);
 };

@@ -17,7 +17,7 @@ QString Gw2RecipesDB::recipesTableScheme =
 	"OUTPUT_ITEM_ID INT PRIMARY KEY NOT NULL,"
 	"RECIPE_ID INT,"
 	"JSON_DATA_STRING TEXT);";
-QSqlDatabase Gw2RecipesDB::db;
+QString Gw2RecipesDB::databaseName = "RECIPES";
 QHash<qint32, qint32> Gw2RecipesDB::recipeIDOutputItemIDHash;
 QHash<qint32, qint32> Gw2RecipesDB::outputItemIDRecipeIDHash;
 QHash<qint32, Recipe> Gw2RecipesDB::recipeIDRecipeHash;
@@ -26,7 +26,7 @@ void Gw2RecipesDB::init() {
 	qDebug() << "Initializing Gw2RecipeDB...";
 	QTime t; t.start();
 	QFileInfo dbInfo(path);
-	db = QSqlDatabase::addDatabase("QSQLITE", "RECIPES");
+	QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE", databaseName);
 	db.setDatabaseName(path);
 	if(!dbInfo.exists() || !dbInfo.isFile()) {
 		if(db.open()) {
@@ -90,12 +90,14 @@ bool Gw2RecipesDB::containsOutputItemID(qint32 outputItemID) {
 
 void Gw2RecipesDB::clear() {
 	close();
+	QSqlDatabase::removeDatabase(databaseName);
 	recipeIDOutputItemIDHash.clear();
 	outputItemIDRecipeIDHash.clear();
 	recipeIDRecipeHash.clear();
 }
 
 bool Gw2RecipesDB::open() {
+	QSqlDatabase db = QSqlDatabase::database(databaseName);
 	if(!db.isOpen()) {
 		db.open();
 		if(db.isOpenError()) {
@@ -105,21 +107,18 @@ bool Gw2RecipesDB::open() {
 		}
 		return true;
 	}
-	qDebug() << "Warning! Attempting to open recipe database while it is already opened.";
 	return true;
 }
 
-bool Gw2RecipesDB::close() {
-	if(db.isOpen()) {
+void Gw2RecipesDB::close() {
+	QSqlDatabase db = QSqlDatabase::database(databaseName, false);
+	if(db.isOpen())
 		db.close();
-	} else
-		qDebug() << "Warning! Attempting to close database while it is already closed.";
-	return true;
 }
 
 void Gw2RecipesDB::load() {
 	if(open()) {
-		QSqlQuery q(db);
+		QSqlDatabase db = QSqlDatabase::database(databaseName);
 		QSqlQueryModel model;
 		model.setQuery("SELECT * FROM RECIPES", db);
 		//Make sure to load the entire db
@@ -153,6 +152,7 @@ bool Gw2RecipesDB::write(
 		QString jsonString)
 {
 	if(open()) {
+		QSqlDatabase db = QSqlDatabase::database(databaseName);
 		recipeIDOutputItemIDHash[recipeID] = outputItemID;
 		outputItemIDRecipeIDHash[outputItemID] = recipeID;
 		QSqlQuery q(db);

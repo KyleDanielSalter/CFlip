@@ -15,20 +15,15 @@
 WatchlistRow::WatchlistRow(qint32 itemID)
 	: itemID(itemID)
 	, craftingTree(itemID)
-	, treeItem(craftingTree.getQTree())
 {
 	QString itemName(Gw2ItemDB::getItemName(itemID)),
 		costToCraft(Gw2Currency::string(craftingTree.getVertex()->totalCraftCost)),
 		adjBS(Gw2Currency::string(craftingTree.getAdjBS())),
 		adjCS(Gw2Currency::string(craftingTree.getProfit()));
-	std::shared_ptr<QTableWidgetItem> itemNameTableItem(new QTableWidgetItem(itemName, 0)),
-		costToCraftTableItem(new QTableWidgetItem(costToCraft, 0)),
-		adjBSTableItem(new QTableWidgetItem(adjBS, 0)),
-		adjCSTableItem(new QTableWidgetItem(adjCS, 0));
-	tableItems << itemNameTableItem;
-	tableItems << costToCraftTableItem;
-	tableItems << adjBSTableItem;
-	tableItems << adjCSTableItem;
+	tableItems << itemName;
+	tableItems << costToCraft;
+	tableItems << adjBS;
+	tableItems << adjCS;
 }
 
 WatchlistTabWidget::WatchlistTabWidget(
@@ -40,23 +35,31 @@ WatchlistTabWidget::WatchlistTabWidget(
 	, name(name)
 {
     ui->setupUi(this);
-	ui->treeWidget->setColumnWidth(0, 200);
 	init(itemIDs);
 }
 
 WatchlistTabWidget::~WatchlistTabWidget() {
+	//Unparent the current QTreeWidgetItem from the QTreeWidget for safe deletion.
+	ui->treeWidget->takeTopLevelItem(0);
     delete ui;
 }
 
 void WatchlistTabWidget::add(qint32 itemID) {
-	tableRows.append(WatchlistRow(itemID));
 	//must be unique
-	if(findIndex(itemID == -1))
-	   addRowToTable(tableRows.back());
+	if(findIndex(itemID) == -1) {
+		//Disable add button until complete
+		ui->addNewItemButton->setText("Loading...");
+		ui->addNewItemButton->setEnabled(false);
+		tableRows.append(WatchlistRow(itemID));
+		addRowToTable(tableRows.back());
+		ui->addNewItemButton->setText("Add New Item");
+		ui->addNewItemButton->setEnabled(true);
+	} else
+		QMessageBox::warning(this, "Can Not Add New Item", "Item must be unique.");
 }
 
-void WatchlistTabWidget::remove(qint32 itemID) {
-	qint32 index = findIndex(itemID);
+void WatchlistTabWidget::remove(WatchlistRow &row) {
+	qint32 index = findIndex(row.itemID);
 	if(index != -1) {
 		tableRows.removeAt(index);
 		ui->watchlistTable->removeRow(index);
@@ -67,6 +70,10 @@ void WatchlistTabWidget::remove(qint32 itemID) {
 
 QString WatchlistTabWidget::getName() {
 	return name;
+}
+
+void WatchlistTabWidget::setName(QString newName) {
+	name = newName;
 }
 
 QList<qint32> WatchlistTabWidget::getItemIDs() {
@@ -89,6 +96,13 @@ void WatchlistTabWidget::on_addNewItemButton_clicked() {
 }
 
 void WatchlistTabWidget::init(QList<qint32> itemIDs) {
+	//Format adjusting
+	ui->watchlistTable->setSortingEnabled(true);
+	ui->treeWidget->setColumnWidth(0, 200);
+	QHeaderView *watchlistTableVerticalHeader = ui->watchlistTable->verticalHeader();
+	//Aesthetically pleasing value found experimentally
+	watchlistTableVerticalHeader->setDefaultSectionSize(22);
+	//Init data in the table.
 	for(qint32 row = 0; row < itemIDs.size(); ++row) {
 		tableRows.append(WatchlistRow(itemIDs[row]));
 		addRowToTable(tableRows.back());
@@ -98,9 +112,12 @@ void WatchlistTabWidget::init(QList<qint32> itemIDs) {
 void WatchlistTabWidget::addRowToTable(WatchlistRow &row) {
 	qint32 rowInsert = ui->watchlistTable->rowCount();
 	ui->watchlistTable->setRowCount(rowInsert + 1);
-	for(qint32 col = 0; col < row.tableItems.size(); ++col)
-		ui->watchlistTable->setItem(rowInsert, col, row.tableItems[col].get());
-	setTreeWidgetItem(row.treeItem.get());
+	//Item Name
+	ui->watchlistTable->setItem(rowInsert, 0, new QTableWidgetItem(row.tableItems[0], 0));
+	//CTC, Adj B/S, Adj C/S
+	for(qint32 col = 1; col < row.tableItems.size(); ++col)
+		ui->watchlistTable->setItem(rowInsert, col, new Gw2CurrencyTableWidgetItem(row.tableItems[col]));
+	setTreeWidgetItem(row);
 }
 
 qint32 WatchlistTabWidget::findIndex(qint32 itemID) {
@@ -111,16 +128,42 @@ qint32 WatchlistTabWidget::findIndex(qint32 itemID) {
 	return -1;
 }
 
-void WatchlistTabWidget::setTreeWidgetItem(QTreeWidgetItem *treeItem) {
-	if(ui->treeWidget->topLevelItem(0) != treeItem) {
-		while(ui->treeWidget->topLevelItemCount() > 0)
-			ui->treeWidget->takeTopLevelItem(0);
-		ui->treeWidget->insertTopLevelItem(0, treeItem);
-		expandCraftTreeWidgetItems(ui->treeWidget->topLevelItem(0));
+QTreeWidgetItem* WatchlistTabWidget::buildQTree(CraftingTreeVertex *vertex, QTreeWidgetItem *parent) {
+	QTreeWidgetItem* ret = new QTreeWidgetItem(parent, 0);
+	QStringList cols = getTreeColumns(vertex);
+	for(qint32 i = 0; i < cols.size(); ++i)
+		ret->setText(i, cols[i]);
+	for(auto i : vertex->components) {
+		CraftingTreeVertex* next = static_cast<CraftingTreeVertex*>(i.first.get());
+		buildQTree(next, ret);
 	}
+	return ret;
 }
 
-void WatchlistTabWidget::expandCraftTreeWidgetItems(QTreeWidgetItem* item) {
+QStringList WatchlistTabWidget::getTreeColumns(CraftingTreeVertex* vertex) {
+	QString itemName = Gw2ItemDB::getItemName(vertex->outputItemID),
+		craftTypeStr = vertex->craftType == CraftingTreeVertex::BUY ? "Buy" : "Craft",
+		costStr = vertex->craftType == CraftingTreeVertex::BUY ? Gw2Currency::string(vertex->totalMarketValue) : Gw2Currency::string(vertex->totalCraftCost);
+	return QStringList({itemName, craftTypeStr, costStr});
+}
+
+void WatchlistTabWidget::setTreeWidgetItem(WatchlistRow &row) {
+	QTreeWidgetItem* currentTreeItem = ui->treeWidget->topLevelItem(0);
+	if(currentTreeItem != nullptr) {
+		//Remove the tree if the current tree is not the same as the new one.
+		if(currentTreeItem->text(0) == Gw2ItemDB::getItemName(row.itemID))
+			return;
+		else {
+			while(ui->treeWidget->topLevelItemCount() > 0)
+				delete ui->treeWidget->takeTopLevelItem(0);
+		}
+	}
+	QTreeWidgetItem *treeItem = buildQTree(row.craftingTree.getVertex());
+	ui->treeWidget->insertTopLevelItem(0, treeItem);
+	expandCraftTreeWidgetItems(ui->treeWidget->topLevelItem(0));
+}
+
+void WatchlistTabWidget::expandCraftTreeWidgetItems(QTreeWidgetItem *item) {
 	if(item->text(1) == "Craft")
 		item->setExpanded(true);
 	for(qint32 i = 0; i < item->childCount(); ++i)
@@ -128,7 +171,10 @@ void WatchlistTabWidget::expandCraftTreeWidgetItems(QTreeWidgetItem* item) {
 }
 
 void WatchlistTabWidget::on_watchlistTable_cellClicked(int row, int column) {
-	setTreeWidgetItem(tableRows[row].treeItem.get());
+	QTableWidgetItem* rowWidgetItem = ui->watchlistTable->item(row, 0);
+	qint32 itemID = Gw2ItemDB::getItemID(rowWidgetItem->text());
+	if(itemID > 0)
+		setTreeWidgetItem(tableRows[findIndex(itemID)]);
 }
 
 void WatchlistTabWidget::on_watchlistTable_customContextMenuRequested(const QPoint &pos)
@@ -139,15 +185,33 @@ void WatchlistTabWidget::on_watchlistTable_customContextMenuRequested(const QPoi
 		QPoint globalPos = ui->watchlistTable->viewport()->mapToGlobal(pos);
 		QAction *removeAction = rightClickMenu.exec(globalPos);
 		if(removeAction) {
-			QTableWidgetItem *clickedItem = ui->watchlistTable->itemAt(pos);
-			qint32 row = ui->watchlistTable->row(clickedItem);;
-			remove(tableRows[row].itemID);
+			//Find the rows of the selected items
+			QList<qint32> selectedRows;
+			QList<QTableWidgetItem*> selectedItems = ui->watchlistTable->selectedItems();
+			for(auto i : selectedItems) {
+				qint32 row = ui->watchlistTable->row(i);
+				if(!selectedRows.contains(row))
+					selectedRows << row;
+			}
+			//Remove selected rows
+			for(auto i : selectedRows)
+				remove(tableRows[i]);
 		}
 	}
 }
 
 void WatchlistTabWidget::on_startBatchButton_clicked()
 {
-	BatchWindow *newBatch = new BatchWindow(tableRows, parentWidget());
-	newBatch->show();
+	if(!tableRows.empty()) {
+		QList<WatchlistRow> rowsInCurrentOrder;
+		for(qint32 row = 0; row < ui->watchlistTable->rowCount(); ++row) {
+			QTableWidgetItem* rowWidgetItem = ui->watchlistTable->item(row, 0);
+			qint32 itemID = Gw2ItemDB::getItemID(rowWidgetItem->text());
+			if(itemID > 0)
+				rowsInCurrentOrder << tableRows[findIndex(itemID)];
+		}
+		BatchWindow *newBatch = new BatchWindow(rowsInCurrentOrder, parentWidget());
+		newBatch->show();
+	} else
+		QMessageBox::warning(this, "Can Not Start Empty Batch", "Enter at least one item into the watchlist before starting a new batch.");
 }

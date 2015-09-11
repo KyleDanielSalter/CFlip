@@ -34,6 +34,8 @@ Thumbs.db
 
 # Build directories
 *build*/
+release/
+debug/
 
 # Qt .user files
 *.pro.user
@@ -43,3 +45,13 @@ Thumbs.db
 
 #swap files
 *.swp
+
+#MXE makefiles
+Makefile
+Makefile.*
+
+#MXE misc
+moc_*.*
+cflip_plugin_import.cpp
+object_script.CFlip.Debug
+object_script.CFlip.Release

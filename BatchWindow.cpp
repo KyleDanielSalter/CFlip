@@ -1,5 +1,6 @@
 #include "BatchWindow.h"
 #include "ui_BatchWindow.h"
+#include <QDebug>
 #include <QTableWidgetItem>
 #include <QSpinBox>
 #include <QHash>
@@ -22,15 +23,33 @@ BatchWindow::~BatchWindow() {
 }
 
 void BatchWindow::watchlistRowQuantityChanged() {
+	ui->watchlistItemsTable->setSortingEnabled(false);
 	qint32 row = getSpinnerRow(sender());
 	if(row != -1) {
-		if(updateWatchlistRow(row))
-			update();
+		QString itemName = ui->watchlistItemsTable->item(row, 1)->text();
+		qint32 index = findIndex(Gw2ItemDB::getItemID(itemName));
+		if(index != -1) {
+			if(updateWatchlistRow(row, rows[index]))
+				update();
+		}
 	}
+	ui->watchlistItemsTable->setSortingEnabled(true);
 }
 
 void BatchWindow::init() {
 	setWindowTitle("New Batch");
+	//ui->watchlistItemsTable->setColumnCount(5);
+	ui->watchlistItemsTable->setSortingEnabled(true);
+	ui->shoppingListTable->setSortingEnabled(true);
+	ui->overflowTable->setSortingEnabled(true);
+	//Set row height to 22 for all tables to save space
+	QHeaderView *watchlistTableVerticalHeader = ui->watchlistItemsTable->verticalHeader(),
+		*shoppingListTableVerticalHeader = ui->shoppingListTable->verticalHeader(),
+		*overflowTableVerticalHeader = ui->overflowTable->verticalHeader();
+	watchlistTableVerticalHeader->setDefaultSectionSize(22);
+	shoppingListTableVerticalHeader->setDefaultSectionSize(22);
+	overflowTableVerticalHeader->setDefaultSectionSize(22);
+	//Init data in tables
 	initWatchlistTable();
 	updateShoppingListTable();
 	updateOverflowTable();
@@ -38,13 +57,13 @@ void BatchWindow::init() {
 }
 
 void BatchWindow::initWatchlistTable() {
-	ui->shoppingListTable->setRowCount(0);
+	ui->watchlistItemsTable->setRowCount(0);
 	ui->watchlistItemsTable->setRowCount(rows.size());
 	for(qint32 i = 0; i < rows.size(); ++i) {
 		CraftingTreeRoot *cTree = &rows[i].craftingTree;
 		QString itemName = Gw2ItemDB::getItemName(rows[i].itemID);
 		QSpinBox *spinner = new QSpinBox();
-		spinner->setRange(0, 1000);
+		spinner->setRange(0, INT_MAX);
 		if(ui->preventOverflowCheckBox->isChecked()) {
 			qint32 interval = cTree->getVertex()->findN();
 			spinner->setSingleStep(interval);
@@ -57,10 +76,12 @@ void BatchWindow::initWatchlistTable() {
 		//Item Name
 		ui->watchlistItemsTable->setItem(i, 1, new QTableWidgetItem(itemName, 0));
 		//Cost
-		ui->watchlistItemsTable->setItem(i, 2, new QTableWidgetItem(0));
+		ui->watchlistItemsTable->setItem(i, 2, new Gw2CurrencyTableWidgetItem(0));
+		//Profit
+		ui->watchlistItemsTable->setItem(i, 3, new Gw2CurrencyTableWidgetItem(0));
 		//# Crafts
-		ui->watchlistItemsTable->setItem(i, 3, new QTableWidgetItem(0));
-		updateWatchlistRow(i);
+		ui->watchlistItemsTable->setItem(i, 4, new QTableWidgetItem(0));
+		updateWatchlistRow(i, rows[i]);
 	}
 }
 
@@ -70,8 +91,8 @@ void BatchWindow::update() {
 	updateOutputTextFields();
 }
 
-bool BatchWindow::updateWatchlistRow(qint32 row) {
-	CraftingTreeRoot *cTree = &rows[row].craftingTree;
+bool BatchWindow::updateWatchlistRow(qint32 row, WatchlistRow &rowItem) {
+	CraftingTreeRoot *cTree = &rowItem.craftingTree;
 	CraftingTreeVertex* cTreeVertex = cTree->getVertex();
 	QSpinBox *spinner = static_cast<QSpinBox*>(ui->watchlistItemsTable->cellWidget(row, 0));
 	//Adjust value if the prevent overflow box is checked
@@ -87,7 +108,8 @@ bool BatchWindow::updateWatchlistRow(qint32 row) {
 	}
 	cTree->setCount(spinner->value());
 	ui->watchlistItemsTable->item(row, 2)->setText(Gw2Currency::string(cTreeVertex->totalCraftCost));
-	ui->watchlistItemsTable->item(row, 3)->setText(QString::number(cTreeVertex->getCraftCount()));
+	ui->watchlistItemsTable->item(row, 3)->setText(Gw2Currency::string(cTree->getProfit()));
+	ui->watchlistItemsTable->item(row, 4)->setText(QString::number(cTreeVertex->getCraftCount()));
 	return true;
 }
 
@@ -95,18 +117,23 @@ void BatchWindow::updateShoppingListTable() {
 	QHash<qint32, QPair<qint32, qint32>> totalShoppingList;
 	//make the total shopping list by combining all other shopping lists.
 	for(qint32 row = 0; row < ui->watchlistItemsTable->rowCount(); ++row) {
-		CraftingTreeRoot *cTree = &rows[row].craftingTree;
-		QHash<qint32, QPair<qint32, qint32>> currentRowShoppingList = cTree->getShoppingList();
-		for(auto iter = currentRowShoppingList.begin(); iter != currentRowShoppingList.end(); ++iter) {
-			//Non-unique items get added to existing values
-			if(totalShoppingList.contains(iter.key())) {
-				qint32 totalQuantity = totalShoppingList.value(iter.key()).first,
-					totalCost = totalShoppingList.value(iter.key()).second;
-				totalQuantity += iter.value().first;
-				totalCost += iter.value().second;
-				totalShoppingList.insert(iter.key(), QPair<qint32, qint32>(totalQuantity, totalCost));
-			} else
-				totalShoppingList.insert(iter.key(), iter.value());
+		QString itemName = ui->watchlistItemsTable->item(row, 1)->text();
+		qint32 index = findIndex(Gw2ItemDB::getItemID(itemName));
+		CraftingTreeRoot *cTree = &rows[index].craftingTree;
+		CraftingTreeVertex* cTreeVertex = cTree->getVertex();
+		if(cTreeVertex->craftCount != 0) {
+			QHash<qint32, QPair<qint32, qint32>> currentRowShoppingList = cTree->getShoppingList();
+			for(auto iter = currentRowShoppingList.begin(); iter != currentRowShoppingList.end(); ++iter) {
+				//Non-unique items get added to existing values
+				if(totalShoppingList.contains(iter.key())) {
+					qint32 totalQuantity = totalShoppingList.value(iter.key()).first,
+						totalCost = totalShoppingList.value(iter.key()).second;
+					totalQuantity += iter.value().first;
+					totalCost += iter.value().second;
+					totalShoppingList.insert(iter.key(), QPair<qint32, qint32>(totalQuantity, totalCost));
+				} else
+					totalShoppingList.insert(iter.key(), iter.value());
+			}
 		}
 	}
 	//Update the table
@@ -117,7 +144,7 @@ void BatchWindow::updateShoppingListTable() {
 		for(; row < ui->shoppingListTable->rowCount() && iter != totalShoppingList.end(); ++row, ++iter) {
 			ui->shoppingListTable->setItem(row, 0, new QTableWidgetItem(Gw2ItemDB::getItemName(iter.key()), 0));
 			ui->shoppingListTable->setItem(row, 1, new QTableWidgetItem(QString::number(iter.value().first), 0));
-			ui->shoppingListTable->setItem(row, 2, new QTableWidgetItem(Gw2Currency::string(iter.value().second), 0));
+			ui->shoppingListTable->setItem(row, 2, new Gw2CurrencyTableWidgetItem(iter.value().second));
 		}
 	}
 }
@@ -182,4 +209,12 @@ void BatchWindow::on_preventOverflowCheckBox_toggled(bool checked)
 		QSpinBox *spinner = static_cast<QSpinBox*>(ui->watchlistItemsTable->cellWidget(row, 0));
 		spinner->setSingleStep(step);
 	}
+}
+
+qint32 BatchWindow::findIndex(qint32 itemID) {
+	for(qint32 i = 0; i < rows.size(); ++i) {
+		if(rows[i].itemID == itemID)
+			return i;
+	}
+	return -1;
 }

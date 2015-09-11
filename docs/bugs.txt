@@ -1,0 +1,7 @@
+v0.1:
+-Set row height on tables to minimum to save space
+-Add text notation to crafting tree table to show that an item does not have to be bought or crafted
+-Loading screen
+-Crash when adding another item before the first is done loading
+-(FIXED) Setting a quantity to zero in the batch window adds that product to the shopping list with a quantity of a zero
+

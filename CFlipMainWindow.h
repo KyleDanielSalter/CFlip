@@ -16,6 +16,8 @@ public:
 private slots:
 	void on_watchListTab_tabCloseRequested(int index);
 	void on_actionNew_Watchlist_triggered();
+	void on_watchListTab_tabBarDoubleClicked(int index);
+
 private:
 	Ui::CFlipMainWindow *ui;
 };

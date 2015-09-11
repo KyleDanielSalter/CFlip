@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>999</width>
-    <height>421</height>
+    <width>1100</width>
+    <height>409</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -18,9 +18,12 @@
     <rect>
      <x>10</x>
      <y>40</y>
-     <width>421</width>
-     <height>371</height>
+     <width>521</width>
+     <height>361</height>
     </rect>
+   </property>
+   <property name="editTriggers">
+    <set>QAbstractItemView::NoEditTriggers</set>
    </property>
    <column>
     <property name="text">
@@ -35,6 +38,11 @@
    <column>
     <property name="text">
      <string>Total Cost</string>
+    </property>
+   </column>
+   <column>
+    <property name="text">
+     <string>Total Profit</string>
     </property>
    </column>
    <column>
@@ -59,15 +67,30 @@
   <widget class="QTableWidget" name="shoppingListTable">
    <property name="geometry">
     <rect>
-     <x>440</x>
+     <x>540</x>
      <y>40</y>
      <width>321</width>
      <height>301</height>
     </rect>
    </property>
-   <property name="sortingEnabled">
-    <bool>false</bool>
+   <property name="editTriggers">
+    <set>QAbstractItemView::NoEditTriggers</set>
    </property>
+   <property name="dragDropOverwriteMode">
+    <bool>true</bool>
+   </property>
+   <property name="sortingEnabled">
+    <bool>true</bool>
+   </property>
+   <property name="cornerButtonEnabled">
+    <bool>true</bool>
+   </property>
+   <attribute name="horizontalHeaderShowSortIndicator" stdset="0">
+    <bool>true</bool>
+   </attribute>
+   <attribute name="verticalHeaderShowSortIndicator" stdset="0">
+    <bool>false</bool>
+   </attribute>
    <column>
     <property name="text">
      <string>Item Name</string>
@@ -87,7 +110,7 @@
   <widget class="QLabel" name="shoppingListLabel">
    <property name="geometry">
     <rect>
-     <x>440</x>
+     <x>540</x>
      <y>10</y>
      <width>91</width>
      <height>17</height>
@@ -100,8 +123,8 @@
   <widget class="QLineEdit" name="estTotalInvestmentLineEdit">
    <property name="geometry">
     <rect>
-     <x>440</x>
-     <y>380</y>
+     <x>540</x>
+     <y>370</y>
      <width>161</width>
      <height>29</height>
     </rect>
@@ -110,8 +133,8 @@
   <widget class="QLabel" name="estTotalInvestmentLabel">
    <property name="geometry">
     <rect>
-     <x>440</x>
-     <y>360</y>
+     <x>540</x>
+     <y>350</y>
      <width>171</width>
      <height>17</height>
     </rect>
@@ -123,8 +146,8 @@
   <widget class="QLabel" name="estTotalProfitLabel">
    <property name="geometry">
     <rect>
-     <x>620</x>
-     <y>360</y>
+     <x>710</x>
+     <y>350</y>
      <width>131</width>
      <height>17</height>
     </rect>
@@ -136,8 +159,8 @@
   <widget class="QLineEdit" name="estTotalProfitLineEdit">
    <property name="geometry">
     <rect>
-     <x>620</x>
-     <y>380</y>
+     <x>710</x>
+     <y>370</y>
      <width>131</width>
      <height>29</height>
     </rect>
@@ -146,8 +169,8 @@
   <widget class="QLabel" name="totalCraftsLabel">
    <property name="geometry">
     <rect>
-     <x>760</x>
-     <y>360</y>
+     <x>850</x>
+     <y>350</y>
      <width>71</width>
      <height>17</height>
     </rect>
@@ -159,8 +182,8 @@
   <widget class="QLineEdit" name="totalCraftsLineEdit">
    <property name="geometry">
     <rect>
-     <x>760</x>
-     <y>380</y>
+     <x>850</x>
+     <y>370</y>
      <width>71</width>
      <height>29</height>
     </rect>
@@ -172,8 +195,8 @@
    </property>
    <property name="geometry">
     <rect>
-     <x>890</x>
-     <y>380</y>
+     <x>1000</x>
+     <y>370</y>
      <width>89</width>
      <height>27</height>
     </rect>
@@ -207,14 +230,17 @@
   <widget class="QTableWidget" name="overflowTable">
    <property name="geometry">
     <rect>
-     <x>770</x>
+     <x>870</x>
      <y>40</y>
      <width>221</width>
      <height>301</height>
     </rect>
    </property>
+   <property name="editTriggers">
+    <set>QAbstractItemView::NoEditTriggers</set>
+   </property>
    <property name="sortingEnabled">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <column>
     <property name="text">
@@ -230,7 +256,7 @@
   <widget class="QLabel" name="overflowLabel">
    <property name="geometry">
     <rect>
-     <x>770</x>
+     <x>870</x>
      <y>10</y>
      <width>59</width>
      <height>17</height>

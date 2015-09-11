@@ -34,6 +34,9 @@
    <property name="alternatingRowColors">
     <bool>true</bool>
    </property>
+   <attribute name="verticalHeaderMinimumSectionSize">
+    <number>20</number>
+   </attribute>
    <column>
     <property name="text">
      <string>Item Name</string>
@@ -41,17 +44,17 @@
    </column>
    <column>
     <property name="text">
-     <string>CTC</string>
+     <string>Craft Cost</string>
     </property>
    </column>
    <column>
     <property name="text">
-     <string>Adj B/S</string>
+     <string>B/S Spread</string>
     </property>
    </column>
    <column>
     <property name="text">
-     <string>Adj C/S</string>
+     <string>Craft Profit</string>
     </property>
    </column>
   </widget>

@@ -24,7 +24,6 @@ SOURCES += main.cpp\
     Gw2ListingsParser.cpp \
     Gw2Currency.cpp \
     Gw2RecipesParser.cpp \
-    CraftingItem.cpp \
     Gw2APIParser.cpp \
     Gw2APIMultiCaller.cpp \
     Gw2APIResult.cpp \
@@ -35,7 +34,8 @@ SOURCES += main.cpp\
     Gw2ListingsManager.cpp \
     WatchlistManager.cpp \
     WatchlistTabWidget.cpp \
-    BatchWindow.cpp
+    BatchWindow.cpp \
+    LoadingSplash.cpp
 
 HEADERS  += CFlipMainWindow.h \
     Gw2ItemDB.h \
@@ -45,7 +45,6 @@ HEADERS  += CFlipMainWindow.h \
     Gw2ListingsParser.h \
     Gw2Currency.h \
     Gw2RecipesParser.h \
-    CraftingItem.h \
     Gw2APIParser.h \
     Gw2APIMultiCaller.h \
     Gw2APIResult.h \
@@ -56,8 +55,10 @@ HEADERS  += CFlipMainWindow.h \
     Gw2ListingsManager.h \
     WatchlistManager.h \
     WatchlistTabWidget.h \
-    BatchWindow.h
+    BatchWindow.h \
+    LoadingSplash.h
 
 FORMS    += CFlipMainWindow.ui \
     WatchlistTabWidget.ui \
-    BatchWindow.ui
+    BatchWindow.ui \
+    LoadingSplash.ui

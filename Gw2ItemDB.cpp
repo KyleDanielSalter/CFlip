@@ -18,7 +18,7 @@ QString Gw2ItemDB::itemsTableScheme =
 	"NAME TEXT NOT NULL,"
 	"ICONURL TEXT,"
 	"JSONDATASTRING TEXT NOT NULL);";
-QSqlDatabase Gw2ItemDB::db;
+QString Gw2ItemDB::databaseName = "ITEMS";
 QHash<qint32, QString> Gw2ItemDB::idNameHashMap;
 QHash<QString, qint32> Gw2ItemDB::nameIDHashMap;
 QHash<qint32, QString> Gw2ItemDB::idIconUrlHashMap;
@@ -29,7 +29,7 @@ void Gw2ItemDB::init() {
 	QTime t; t.start();
 	//Check if there is an existing database, if there is not, create one
 	QFileInfo dbInfo(path);
-	db = QSqlDatabase::addDatabase("QSQLITE", "ITEMS");
+	QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE", databaseName);
 	db.setDatabaseName(path);
 	if(dbInfo.exists() && dbInfo.isFile()) {
 		loadCache();
@@ -43,6 +43,7 @@ void Gw2ItemDB::init() {
 
 void Gw2ItemDB::clear() {
 	close();
+	QSqlDatabase::removeDatabase(databaseName);
 	idNameHashMap.clear();
 	nameIDHashMap.clear();
 	idIconUrlHashMap.clear();
@@ -77,6 +78,7 @@ void Gw2ItemDB::create() {
 		allItems.append(Gw2ItemsParser::get(i).values());
 	}
 	//For each item data, load the cache and write to the database.
+	QSqlDatabase db = QSqlDatabase::database(databaseName);
 	for(auto i : allItems) {
 		qDebug() << i.id;
 		Gw2ItemData item = i;
@@ -178,6 +180,7 @@ QHash<qint32, QString> Gw2ItemDB::getIDJsonDataStringHashMap() {
 }
 
 bool Gw2ItemDB::open() {
+	QSqlDatabase db = QSqlDatabase::database(databaseName, false);
 	if(!db.isOpen()) {
 		db.open();
 		if(db.isOpenError()) {
@@ -187,17 +190,16 @@ bool Gw2ItemDB::open() {
 		}
 		return true;
 	}
-	qDebug() << "Warning! Attempting to open database while it is already opened.";
 	return true;
 }
 
 
 bool Gw2ItemDB::close() {
+	QSqlDatabase db = QSqlDatabase::database(databaseName, false);
 	if(db.isOpen()) {
 		db.close();
 		return true;
 	}
-	qDebug() << "Warning! Attempting to close database while it is already closed.";
 	return false;
 }
 
@@ -222,6 +224,7 @@ void Gw2ItemDB::format() {
 	}
 	//If the new databased successfully opened, create the item table
 	if(open()) {
+		QSqlDatabase db = QSqlDatabase::database(databaseName);
 		QSqlQuery q(db);
 		q.exec(itemsTableScheme);
 	}
@@ -230,7 +233,7 @@ void Gw2ItemDB::format() {
 void Gw2ItemDB::loadCache() {
 	QFileInfo dbInfo(path);
 	if(dbInfo.exists() && dbInfo.isFile() && open()) {
-		QSqlQuery q(db);
+		QSqlDatabase db = QSqlDatabase::database(databaseName);
 		QSqlQueryModel model;
 		model.setQuery("SELECT * FROM ITEMS", db);
 		//Make sure to load the entire db

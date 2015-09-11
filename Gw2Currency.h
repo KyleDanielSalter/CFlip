@@ -2,6 +2,15 @@
 #define GW2CURRENCY_H
 
 #include <QString>
+#include <QTableWidgetItem>
+
+class Gw2CurrencyTableWidgetItem : public QObject, public QTableWidgetItem {
+	Q_OBJECT
+public:
+	Gw2CurrencyTableWidgetItem(qint32 value);
+	Gw2CurrencyTableWidgetItem(QString valueStr);
+	bool operator<(const QTableWidgetItem & other) const;
+};
 
 class Gw2Currency {
 public:

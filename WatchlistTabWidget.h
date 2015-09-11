@@ -3,8 +3,7 @@
 
 #include <memory>
 #include <QWidget>
-#include <QString>
-#include <QList>
+#include <QStringList>
 #include "CraftingTree.h"
 
 class BatchWindow;
@@ -19,9 +18,8 @@ struct WatchlistRow {
 	WatchlistRow(qint32 itemID);
 	qint32 itemID;
 	//Order is Item Name, CTC, Adj B/S, Adj C/S
-	QList<std::shared_ptr<QTableWidgetItem>> tableItems;
+	QStringList tableItems;
 	CraftingTreeRoot craftingTree;
-	std::shared_ptr<QTreeWidgetItem> treeItem;
 };
 
 class WatchlistTabWidget : public QWidget {
@@ -33,8 +31,8 @@ public:
 		QWidget *parent = 0);
 	~WatchlistTabWidget();
 	void add(qint32 itemID);
-	void remove(qint32 itemID);
 	QString getName();
+	void setName(QString newName);
 	QList<qint32> getItemIDs();
 private slots:
 	void on_addNewItemButton_clicked();
@@ -47,9 +45,12 @@ private:
 	QList<WatchlistRow> tableRows;
 	void init(QList<qint32> itemIDs);
 	void addRowToTable(WatchlistRow &row);
+	void remove(WatchlistRow &row);
 	qint32 findIndex(qint32 itemID);
-	void setTreeWidgetItem(QTreeWidgetItem *treeItem);
-	void expandCraftTreeWidgetItems(QTreeWidgetItem *item);
+	QTreeWidgetItem* buildQTree(CraftingTreeVertex *vertex, QTreeWidgetItem *parent = 0);
+	QStringList getTreeColumns(CraftingTreeVertex* vertex);
+	void setTreeWidgetItem(WatchlistRow &row);
+	void expandCraftTreeWidgetItems(QTreeWidgetItem* item);
 };
 
 #endif // WATCHLISTTABWIDGET_H

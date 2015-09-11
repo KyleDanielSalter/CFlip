@@ -2,6 +2,19 @@
 #include <QDebug>
 #include <QChar>
 
+Gw2CurrencyTableWidgetItem::Gw2CurrencyTableWidgetItem(qint32 value)
+	: QTableWidgetItem(Gw2Currency::string(value), 0)
+{}
+
+Gw2CurrencyTableWidgetItem::Gw2CurrencyTableWidgetItem(QString valueStr)
+	: QTableWidgetItem(valueStr, 0)
+{}
+
+bool Gw2CurrencyTableWidgetItem::operator<(const QTableWidgetItem & other) const {
+	qint32 value = Gw2Currency::number(text()), comp = Gw2Currency::number(other.text());
+	return value < comp ? true : false;
+}
+
 QString Gw2Currency::string(qint32 number) {
 	QString ret;
 	qint32 gold(0), silver(0), copper(0);
@@ -37,7 +50,7 @@ qint32 Gw2Currency::number(QString string) {
 			else if(str.contains("c", Qt::CaseInsensitive)) {
 				str.remove("c", Qt::CaseInsensitive);
 				copper = str.toInt();
-			} else
+			} else if(!str.isEmpty())
 				qDebug() << "Error converting Gw2Currency string " + str + " to a number";
 		}
 		qint32 num = gold * 10000 + silver * 100 + copper;

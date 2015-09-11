@@ -159,24 +159,6 @@ qint32 CraftingTreeVertex::getProfit() {
 	return 0;
 }
 
-void CraftingTreeVertex::buildQTree(QTreeWidgetItem *parentItem) {
-	QTreeWidgetItem* currentVertex = new QTreeWidgetItem(parentItem, 0);
-	QStringList cols = getTreeColumns();
-	for(qint32 i = 0; i < cols.size(); ++i)
-		currentVertex->setText(i, cols[i]);
-	for(auto i : components) {
-		CraftingTreeVertex* next = static_cast<CraftingTreeVertex*>(i.first.get());
-		next->buildQTree(currentVertex);
-	}
-}
-
-QStringList CraftingTreeVertex::getTreeColumns() {
-	QString itemName = Gw2ItemDB::getItemName(outputItemID),
-		craftTypeStr = craftType == BUY ? "Buy" : "Craft",
-		costStr = craftType == BUY ? Gw2Currency::string(totalMarketValue) : Gw2Currency::string(totalCraftCost);
-	return QStringList({itemName, craftTypeStr, costStr});
-}
-
 void CraftingTreeVertex::findShoppingList(QHash<qint32, QPair<qint32, qint32> > &materials) {
 	for(auto i : components) {
 		CraftingTreeVertex* next = static_cast<CraftingTreeVertex*>(i.first.get());
@@ -264,19 +246,6 @@ qint32 CraftingTreeRoot::getProfit() {
 		overflowValue += overflowListings.getBoundaryPrice(Listings::SELLS) * i.second;
 	}
 	return ret + (overflowValue - Listings::getTotalFees(overflowValue));
-}
-
-std::shared_ptr<QTreeWidgetItem> CraftingTreeRoot::getQTree()
-{
-	std::shared_ptr<QTreeWidgetItem> ret(new QTreeWidgetItem(0));
-	QStringList cols = getTreeColumns();
-	for(qint32 i = 0; i < cols.size(); ++i)
-		ret->setText(i, cols[i]);
-	for(auto i : components) {
-		CraftingTreeVertex* next = static_cast<CraftingTreeVertex*>(i.first.get());
-		next->buildQTree(ret.get());
-	}
-	return ret;
 }
 
 QHash<qint32, QPair<qint32, qint32>> CraftingTreeRoot::getShoppingList(){

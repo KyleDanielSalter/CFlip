@@ -26,11 +26,12 @@ private:
 	void init();
 	void initWatchlistTable();
 	void update();
-	bool updateWatchlistRow(qint32 row);
+	bool updateWatchlistRow(qint32 row, WatchlistRow &rowItem);
 	void updateShoppingListTable();
 	void updateOverflowTable();
 	void updateOutputTextFields();
 	qint32 getSpinnerRow(QObject *spinnerObj);
+	qint32 findIndex(qint32 itemID);
 };
 
 #endif // BATCHWINDOW_H

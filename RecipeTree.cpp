@@ -89,6 +89,8 @@ qint32 RecipeTreeVertex::print() {
 			text += " KARMA"; break;
 		case TRADING_POST:
 			text += " TRADING_POST"; break;
+		case NO_TYPE:
+			break;
 	}
     qDebug().nospace() << text;
 	tab++;
