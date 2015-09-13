@@ -2,11 +2,11 @@
 #include "ui_WatchlistTabWidget.h"
 #include <QDebug>
 #include <QMessageBox>
-#include <QInputDialog>
 #include <QHash>
 #include <QTreeWidgetItem>
 #include <QAction>
 #include <QMenu>
+#include "AddItemDialog.h"
 #include "BatchWindow.h"
 #include "Gw2ItemDB.h"
 #include "ImageDownloader.h"
@@ -47,13 +47,8 @@ WatchlistTabWidget::~WatchlistTabWidget() {
 void WatchlistTabWidget::add(qint32 itemID) {
 	//must be unique
 	if(findIndex(itemID) == -1) {
-		//Disable add button until complete
-		ui->addNewItemButton->setText("Loading...");
-		ui->addNewItemButton->setEnabled(false);
 		tableRows.append(WatchlistRow(itemID));
 		addRowToTable(tableRows.back());
-		ui->addNewItemButton->setText("Add New Item");
-		ui->addNewItemButton->setEnabled(true);
 	} else
 		QMessageBox::warning(this, "Can Not Add New Item", "Item must be unique.");
 }
@@ -85,13 +80,17 @@ QList<qint32> WatchlistTabWidget::getItemIDs() {
 
 void WatchlistTabWidget::on_addNewItemButton_clicked() {
 	bool ok;
-	QString itemName = QInputDialog::getText(this, tr("Enter Valid Item Name"), tr("Item Name:"),QLineEdit::Normal, "", &ok);
+	AddItemDialog* addItemDialog = new AddItemDialog(this);
+	QList<qint32> itemIDs = addItemDialog->start(ok);
 	if(ok) {
-		qint32 itemID = Gw2ItemDB::getItemID(itemName);
-		if(itemID)
-			add(Gw2ItemDB::getItemID(itemName));
-		else
-			QMessageBox::warning(this, "Invalid Item Name", "The entered item name does not exist.");
+		ui->addNewItemButton->setEnabled(false);
+		for(qint32 i = 0; i < itemIDs.size(); ++i) {
+			if(itemIDs[i] > 0)
+				ui->addNewItemButton->setText(QString::number(i) + " / " + QString::number(itemIDs.size()));
+				add(itemIDs[i]);
+		}
+		ui->addNewItemButton->setText("Add");
+		ui->addNewItemButton->setEnabled(true);
 	}
 }
 
@@ -194,7 +193,7 @@ void WatchlistTabWidget::on_watchlistTable_customContextMenuRequested(const QPoi
 					selectedRows << row;
 			}
 			//Remove selected rows
-			for(auto i : selectedRows)
+			for(qint32 i = selectedRows.size() - 1; i > -1; --i)
 				remove(tableRows[i]);
 		}
 	}

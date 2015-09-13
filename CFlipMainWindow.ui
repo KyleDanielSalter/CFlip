@@ -10,6 +10,18 @@
     <height>521</height>
    </rect>
   </property>
+  <property name="minimumSize">
+   <size>
+    <width>872</width>
+    <height>521</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>872</width>
+    <height>521</height>
+   </size>
+  </property>
   <property name="windowTitle">
    <string>CFlipMainWindow</string>
   </property>

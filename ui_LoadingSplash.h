@@ -46,7 +46,7 @@ public:
     void retranslateUi(QWidget *LoadingSplash)
     {
         LoadingSplash->setWindowTitle(QApplication::translate("LoadingSplash", "Form", 0));
-        label->setText(QApplication::translate("LoadingSplash", "CFlip v0.1 Alpha", 0));
+        label->setText(QApplication::translate("LoadingSplash", "CFlip v0.2 Alpha", 0));
         label_2->setText(QApplication::translate("LoadingSplash", "Loading...", 0));
     } // retranslateUi
 

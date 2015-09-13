@@ -1,0 +1,689 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>AddItemDialog</class>
+ <widget class="QDialog" name="AddItemDialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>572</width>
+    <height>340</height>
+   </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>522</width>
+    <height>308</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>Item Search</string>
+  </property>
+  <widget class="QGroupBox" name="rarityGroupBox">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>10</y>
+     <width>120</width>
+     <height>191</height>
+    </rect>
+   </property>
+   <property name="title">
+    <string>Rarity</string>
+   </property>
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>false</bool>
+   </property>
+   <widget class="QListWidget" name="rarityListWidget">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>20</y>
+      <width>111</width>
+      <height>161</height>
+     </rect>
+    </property>
+    <property name="editTriggers">
+     <set>QAbstractItemView::NoEditTriggers</set>
+    </property>
+    <property name="selectionMode">
+     <enum>QAbstractItemView::ExtendedSelection</enum>
+    </property>
+    <item>
+     <property name="text">
+      <string>Junk</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Basic</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Fine</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Masterwork</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Rare</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Exotic</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Ascended</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Legendary</string>
+     </property>
+    </item>
+   </widget>
+  </widget>
+  <widget class="QLineEdit" name="searchQueryLineEdit">
+   <property name="geometry">
+    <rect>
+     <x>100</x>
+     <y>290</y>
+     <width>201</width>
+     <height>29</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QGroupBox" name="searchResultsGroupBox">
+   <property name="geometry">
+    <rect>
+     <x>340</x>
+     <y>10</y>
+     <width>231</width>
+     <height>261</height>
+    </rect>
+   </property>
+   <property name="title">
+    <string>Search Results</string>
+   </property>
+   <widget class="QListWidget" name="searchResultsListWidget">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>20</y>
+      <width>221</width>
+      <height>231</height>
+     </rect>
+    </property>
+    <property name="selectionMode">
+     <enum>QAbstractItemView::ExtendedSelection</enum>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QTreeWidget" name="itemTypeTreeWidget">
+   <property name="geometry">
+    <rect>
+     <x>130</x>
+     <y>10</y>
+     <width>201</width>
+     <height>251</height>
+    </rect>
+   </property>
+   <property name="sizeAdjustPolicy">
+    <enum>QAbstractScrollArea::AdjustIgnored</enum>
+   </property>
+   <property name="editTriggers">
+    <set>QAbstractItemView::NoEditTriggers</set>
+   </property>
+   <property name="alternatingRowColors">
+    <bool>false</bool>
+   </property>
+   <property name="selectionMode">
+    <enum>QAbstractItemView::ExtendedSelection</enum>
+   </property>
+   <property name="indentation">
+    <number>17</number>
+   </property>
+   <property name="rootIsDecorated">
+    <bool>true</bool>
+   </property>
+   <column>
+    <property name="text">
+     <string>Type</string>
+    </property>
+   </column>
+   <item>
+    <property name="text">
+     <string>Armor</string>
+    </property>
+    <item>
+     <property name="text">
+      <string>Boots</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Coat</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Gloves</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Helm</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>HelmAquatic</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Leggings</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Shoulders</string>
+     </property>
+    </item>
+   </item>
+   <item>
+    <property name="text">
+     <string>Back</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Bag</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Consumable</string>
+    </property>
+    <item>
+     <property name="text">
+      <string>AppearanceChange</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Booze</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>ContractNpc</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Food</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Generic</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Halloween</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Immediate</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Transmutation</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Unlock</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>UpgradeRemoval</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Utility</string>
+     </property>
+    </item>
+   </item>
+   <item>
+    <property name="text">
+     <string>Container</string>
+    </property>
+    <item>
+     <property name="text">
+      <string>Default</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>GiftBox</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>OpenUI</string>
+     </property>
+    </item>
+   </item>
+   <item>
+    <property name="text">
+     <string>CraftingMaterial</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Gathering</string>
+    </property>
+    <item>
+     <property name="text">
+      <string>Foraging</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Logging</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Mining</string>
+     </property>
+    </item>
+   </item>
+   <item>
+    <property name="text">
+     <string>Gizmo</string>
+    </property>
+    <item>
+     <property name="text">
+      <string>Default</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>ContainerKey</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>ContainerKey</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>UnlimitedConsumable</string>
+     </property>
+    </item>
+   </item>
+   <item>
+    <property name="text">
+     <string>MiniPet</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Tool</string>
+    </property>
+    <item>
+     <property name="text">
+      <string>Salvage</string>
+     </property>
+    </item>
+   </item>
+   <item>
+    <property name="text">
+     <string>Trait</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Trinket</string>
+    </property>
+    <item>
+     <property name="text">
+      <string>Accessory</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Amulet</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Ring</string>
+     </property>
+    </item>
+   </item>
+   <item>
+    <property name="text">
+     <string>Trophy</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>UpgradeComponent</string>
+    </property>
+    <item>
+     <property name="text">
+      <string>Default</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Gem</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Gem</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Sigil</string>
+     </property>
+    </item>
+   </item>
+   <item>
+    <property name="text">
+     <string>Weapon</string>
+    </property>
+    <item>
+     <property name="text">
+      <string>One-handed main hand</string>
+     </property>
+     <item>
+      <property name="text">
+       <string>Axe</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Dagger</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Mace</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Pistol</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Scepter</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Sword</string>
+      </property>
+     </item>
+    </item>
+    <item>
+     <property name="text">
+      <string>One-handed off hand</string>
+     </property>
+     <item>
+      <property name="text">
+       <string>Focus</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Shield</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Torch</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Warhorn</string>
+      </property>
+     </item>
+    </item>
+    <item>
+     <property name="text">
+      <string>Two-handed</string>
+     </property>
+     <item>
+      <property name="text">
+       <string>Greatsword</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Hammer</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>LongBow</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Rifle</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>ShortBow</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Staff</string>
+      </property>
+     </item>
+    </item>
+    <item>
+     <property name="text">
+      <string>Aquatic</string>
+     </property>
+     <item>
+      <property name="text">
+       <string>Harpoon</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Speargun</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Trident</string>
+      </property>
+     </item>
+    </item>
+    <item>
+     <property name="text">
+      <string>Other</string>
+     </property>
+     <item>
+      <property name="text">
+       <string>LargeBundle</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>SmallBundle</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Toy</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>TwoHandedToy</string>
+      </property>
+     </item>
+    </item>
+   </item>
+  </widget>
+  <widget class="QGroupBox" name="levelGroupBox">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>200</y>
+     <width>121</width>
+     <height>81</height>
+    </rect>
+   </property>
+   <property name="title">
+    <string>Level</string>
+   </property>
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>false</bool>
+   </property>
+   <widget class="QSpinBox" name="minLevelSpinBox">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>30</y>
+      <width>44</width>
+      <height>27</height>
+     </rect>
+    </property>
+    <property name="minimum">
+     <number>1</number>
+    </property>
+    <property name="maximum">
+     <number>80</number>
+    </property>
+   </widget>
+   <widget class="QLabel" name="toLevelLabel">
+    <property name="geometry">
+     <rect>
+      <x>50</x>
+      <y>30</y>
+      <width>21</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>to</string>
+    </property>
+   </widget>
+   <widget class="QSpinBox" name="maxLevelSpinBox">
+    <property name="geometry">
+     <rect>
+      <x>70</x>
+      <y>30</y>
+      <width>44</width>
+      <height>27</height>
+     </rect>
+    </property>
+    <property name="minimum">
+     <number>1</number>
+    </property>
+    <property name="maximum">
+     <number>80</number>
+    </property>
+    <property name="value">
+     <number>80</number>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QLabel" name="searchQueryLabel">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>290</y>
+     <width>91</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Search Query:</string>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="onlyUseSelectedCheckBox">
+   <property name="geometry">
+    <rect>
+     <x>370</x>
+     <y>270</y>
+     <width>141</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Only Use Selected</string>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="okButton">
+   <property name="geometry">
+    <rect>
+     <x>470</x>
+     <y>300</y>
+     <width>89</width>
+     <height>27</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>OK</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="cancelButton">
+   <property name="geometry">
+    <rect>
+     <x>370</x>
+     <y>300</y>
+     <width>89</width>
+     <height>27</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Cancel</string>
+   </property>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

@@ -1,7 +1,15 @@
 v0.1:
--Set row height on tables to minimum to save space
+-(FIXED)Set row height on tables to a minimum to save space
 -Add text notation to crafting tree table to show that an item does not have to be bought or crafted
 -Loading screen
--Crash when adding another item before the first is done loading
+-(FIXED)Crash when adding another item before the first is done loading
 -(FIXED) Setting a quantity to zero in the batch window adds that product to the shopping list with a quantity of a zero
-
+-(FIXED)Rows containing numeric values that contain alphanumeric characters can not
+be sorted correctly (i.e. currency values in gsc format). Must be fixed before
+row sorting enabled
+-(FIXED)Watchlist window does not remove a range of indexes when more than one
+selected and then removed with the context menu.
+-(FIXED)seg fault when the main window is closed
+-(FIXED)Batches can be started when there are no items in the watchlist
+-(FIXED)Cant rename watchlists
+-(FIXED)Can add multiple of the same item to a watchlist

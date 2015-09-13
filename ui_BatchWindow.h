@@ -139,9 +139,9 @@ public:
         QTableWidgetItem *___qtablewidgetitem1 = watchlistItemsTable->horizontalHeaderItem(1);
         ___qtablewidgetitem1->setText(QApplication::translate("BatchWindow", "Item Name", 0));
         QTableWidgetItem *___qtablewidgetitem2 = watchlistItemsTable->horizontalHeaderItem(2);
-        ___qtablewidgetitem2->setText(QApplication::translate("BatchWindow", "Cost", 0));
+        ___qtablewidgetitem2->setText(QApplication::translate("BatchWindow", "Total Cost", 0));
         QTableWidgetItem *___qtablewidgetitem3 = watchlistItemsTable->horizontalHeaderItem(3);
-        ___qtablewidgetitem3->setText(QApplication::translate("BatchWindow", "Profit", 0));
+        ___qtablewidgetitem3->setText(QApplication::translate("BatchWindow", "Total Profit", 0));
         QTableWidgetItem *___qtablewidgetitem4 = watchlistItemsTable->horizontalHeaderItem(4);
         ___qtablewidgetitem4->setText(QApplication::translate("BatchWindow", "# Crafts", 0));
         watchlistItemsLabel->setText(QApplication::translate("BatchWindow", "Watchlist Items", 0));

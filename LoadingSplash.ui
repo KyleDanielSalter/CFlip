@@ -23,7 +23,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>CFlip v0.1 Alpha</string>
+    <string>CFlip v0.3 Alpha</string>
    </property>
   </widget>
   <widget class="QLabel" name="label_2">

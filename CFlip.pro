@@ -35,7 +35,8 @@ SOURCES += main.cpp\
     WatchlistManager.cpp \
     WatchlistTabWidget.cpp \
     BatchWindow.cpp \
-    LoadingSplash.cpp
+    LoadingSplash.cpp \
+    AddItemDialog.cpp
 
 HEADERS  += CFlipMainWindow.h \
     Gw2ItemDB.h \
@@ -56,9 +57,11 @@ HEADERS  += CFlipMainWindow.h \
     WatchlistManager.h \
     WatchlistTabWidget.h \
     BatchWindow.h \
-    LoadingSplash.h
+    LoadingSplash.h \
+    AddItemDialog.h
 
 FORMS    += CFlipMainWindow.ui \
     WatchlistTabWidget.ui \
     BatchWindow.ui \
-    LoadingSplash.ui
+    LoadingSplash.ui \
+    AddItemDialog.ui

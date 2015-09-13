@@ -38,6 +38,8 @@ public:
         if (CFlipMainWindow->objectName().isEmpty())
             CFlipMainWindow->setObjectName(QStringLiteral("CFlipMainWindow"));
         CFlipMainWindow->resize(872, 521);
+        CFlipMainWindow->setMinimumSize(QSize(872, 521));
+        CFlipMainWindow->setMaximumSize(QSize(872, 521));
         actionNew_Watchlist = new QAction(CFlipMainWindow);
         actionNew_Watchlist->setObjectName(QStringLiteral("actionNew_Watchlist"));
         centralWidget = new QWidget(CFlipMainWindow);

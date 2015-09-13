@@ -73,12 +73,12 @@ public:
         QTableWidgetItem *___qtablewidgetitem = watchlistTable->horizontalHeaderItem(0);
         ___qtablewidgetitem->setText(QApplication::translate("WatchlistTabWidget", "Item Name", 0));
         QTableWidgetItem *___qtablewidgetitem1 = watchlistTable->horizontalHeaderItem(1);
-        ___qtablewidgetitem1->setText(QApplication::translate("WatchlistTabWidget", "CTC", 0));
+        ___qtablewidgetitem1->setText(QApplication::translate("WatchlistTabWidget", "Craft Cost", 0));
         QTableWidgetItem *___qtablewidgetitem2 = watchlistTable->horizontalHeaderItem(2);
-        ___qtablewidgetitem2->setText(QApplication::translate("WatchlistTabWidget", "Adj B/S", 0));
+        ___qtablewidgetitem2->setText(QApplication::translate("WatchlistTabWidget", "B/S Spread", 0));
         QTableWidgetItem *___qtablewidgetitem3 = watchlistTable->horizontalHeaderItem(3);
-        ___qtablewidgetitem3->setText(QApplication::translate("WatchlistTabWidget", "Adj C/S", 0));
-        addNewItemButton->setText(QApplication::translate("WatchlistTabWidget", "Add New Item", 0));
+        ___qtablewidgetitem3->setText(QApplication::translate("WatchlistTabWidget", "Craft Profit", 0));
+        addNewItemButton->setText(QApplication::translate("WatchlistTabWidget", "Add", 0));
         startBatchButton->setText(QApplication::translate("WatchlistTabWidget", "Start Batch", 0));
         QTreeWidgetItem *___qtreewidgetitem = treeWidget->headerItem();
         ___qtreewidgetitem->setText(2, QApplication::translate("WatchlistTabWidget", "Cost", 0));
