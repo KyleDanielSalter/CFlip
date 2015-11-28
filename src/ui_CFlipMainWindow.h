@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'CFlipMainWindow.ui'
 **
-** Created by: Qt User Interface Compiler version 5.5.0
+** Created by: Qt User Interface Compiler version 4.8.7
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -10,16 +10,16 @@
 #define UI_CFLIPMAINWINDOW_H
 
 #include <QtCore/QVariant>
-#include <QtWidgets/QAction>
-#include <QtWidgets/QApplication>
-#include <QtWidgets/QButtonGroup>
-#include <QtWidgets/QHeaderView>
-#include <QtWidgets/QMainWindow>
-#include <QtWidgets/QMenu>
-#include <QtWidgets/QMenuBar>
-#include <QtWidgets/QStatusBar>
-#include <QtWidgets/QTabWidget>
-#include <QtWidgets/QWidget>
+#include <QAction>
+#include <QApplication>
+#include <QButtonGroup>
+#include <QHeaderView>
+#include <QMainWindow>
+#include <QMenu>
+#include <QMenuBar>
+#include <QStatusBar>
+#include <QTabWidget>
+#include <QWidget>
 
 QT_BEGIN_NAMESPACE
 
@@ -36,19 +36,19 @@ public:
     void setupUi(QMainWindow *CFlipMainWindow)
     {
         if (CFlipMainWindow->objectName().isEmpty())
-            CFlipMainWindow->setObjectName(QStringLiteral("CFlipMainWindow"));
+            CFlipMainWindow->setObjectName(QString::fromUtf8("CFlipMainWindow"));
         CFlipMainWindow->resize(872, 521);
         CFlipMainWindow->setMinimumSize(QSize(872, 521));
         CFlipMainWindow->setMaximumSize(QSize(872, 521));
         actionNew_Watchlist = new QAction(CFlipMainWindow);
-        actionNew_Watchlist->setObjectName(QStringLiteral("actionNew_Watchlist"));
+        actionNew_Watchlist->setObjectName(QString::fromUtf8("actionNew_Watchlist"));
         centralWidget = new QWidget(CFlipMainWindow);
-        centralWidget->setObjectName(QStringLiteral("centralWidget"));
+        centralWidget->setObjectName(QString::fromUtf8("centralWidget"));
         watchListTab = new QTabWidget(centralWidget);
-        watchListTab->setObjectName(QStringLiteral("watchListTab"));
+        watchListTab->setObjectName(QString::fromUtf8("watchListTab"));
         watchListTab->setEnabled(true);
         watchListTab->setGeometry(QRect(0, 10, 861, 501));
-        watchListTab->setStyleSheet(QLatin1String("QTabWidget::pane { /* The tab widget frame */\n"
+        watchListTab->setStyleSheet(QString::fromUtf8("QTabWidget::pane { /* The tab widget frame */\n"
 "    border-top: 1px  solid #C2C7CB;\n"
 "}\n"
 "\n"
@@ -90,13 +90,13 @@ public:
         watchListTab->setTabBarAutoHide(false);
         CFlipMainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(CFlipMainWindow);
-        menuBar->setObjectName(QStringLiteral("menuBar"));
+        menuBar->setObjectName(QString::fromUtf8("menuBar"));
         menuBar->setGeometry(QRect(0, 0, 872, 23));
         menuFile = new QMenu(menuBar);
-        menuFile->setObjectName(QStringLiteral("menuFile"));
+        menuFile->setObjectName(QString::fromUtf8("menuFile"));
         CFlipMainWindow->setMenuBar(menuBar);
         statusBar = new QStatusBar(CFlipMainWindow);
-        statusBar->setObjectName(QStringLiteral("statusBar"));
+        statusBar->setObjectName(QString::fromUtf8("statusBar"));
         CFlipMainWindow->setStatusBar(statusBar);
 
         menuBar->addAction(menuFile->menuAction());
@@ -112,12 +112,12 @@ public:
 
     void retranslateUi(QMainWindow *CFlipMainWindow)
     {
-        CFlipMainWindow->setWindowTitle(QApplication::translate("CFlipMainWindow", "CFlipMainWindow", 0));
+        CFlipMainWindow->setWindowTitle(QApplication::translate("CFlipMainWindow", "CFlipMainWindow", 0, 0));
 #ifndef QT_NO_STATUSTIP
         CFlipMainWindow->setStatusTip(QString());
 #endif // QT_NO_STATUSTIP
-        actionNew_Watchlist->setText(QApplication::translate("CFlipMainWindow", "New Watchlist...", 0));
-        menuFile->setTitle(QApplication::translate("CFlipMainWindow", "File", 0));
+        actionNew_Watchlist->setText(QApplication::translate("CFlipMainWindow", "New Watchlist...", 0, 0));
+        menuFile->setTitle(QApplication::translate("CFlipMainWindow", "File", 0, 0));
     } // retranslateUi
 
 };

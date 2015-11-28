@@ -10,7 +10,7 @@ QT       += sql
 CONFIG += c++11
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
-
+CONFIG-=app_bundle
 TARGET = CFlip
 TEMPLATE = app
 

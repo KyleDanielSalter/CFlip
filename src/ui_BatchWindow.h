@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'BatchWindow.ui'
 **
-** Created by: Qt User Interface Compiler version 5.5.0
+** Created by: Qt User Interface Compiler version 4.8.7
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -10,16 +10,16 @@
 #define UI_BATCHWINDOW_H
 
 #include <QtCore/QVariant>
-#include <QtWidgets/QAction>
-#include <QtWidgets/QApplication>
-#include <QtWidgets/QButtonGroup>
-#include <QtWidgets/QCheckBox>
-#include <QtWidgets/QHeaderView>
-#include <QtWidgets/QLabel>
-#include <QtWidgets/QLineEdit>
-#include <QtWidgets/QPushButton>
-#include <QtWidgets/QTableWidget>
-#include <QtWidgets/QWidget>
+#include <QAction>
+#include <QApplication>
+#include <QButtonGroup>
+#include <QCheckBox>
+#include <QHeaderView>
+#include <QLabel>
+#include <QLineEdit>
+#include <QPushButton>
+#include <QTableWidget>
+#include <QWidget>
 
 QT_BEGIN_NAMESPACE
 
@@ -44,7 +44,7 @@ public:
     void setupUi(QWidget *BatchWindow)
     {
         if (BatchWindow->objectName().isEmpty())
-            BatchWindow->setObjectName(QStringLiteral("BatchWindow"));
+            BatchWindow->setObjectName(QString::fromUtf8("BatchWindow"));
         BatchWindow->resize(1100, 409);
         watchlistItemsTable = new QTableWidget(BatchWindow);
         if (watchlistItemsTable->columnCount() < 5)
@@ -59,11 +59,11 @@ public:
         watchlistItemsTable->setHorizontalHeaderItem(3, __qtablewidgetitem3);
         QTableWidgetItem *__qtablewidgetitem4 = new QTableWidgetItem();
         watchlistItemsTable->setHorizontalHeaderItem(4, __qtablewidgetitem4);
-        watchlistItemsTable->setObjectName(QStringLiteral("watchlistItemsTable"));
+        watchlistItemsTable->setObjectName(QString::fromUtf8("watchlistItemsTable"));
         watchlistItemsTable->setGeometry(QRect(10, 40, 521, 361));
         watchlistItemsTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
         watchlistItemsLabel = new QLabel(BatchWindow);
-        watchlistItemsLabel->setObjectName(QStringLiteral("watchlistItemsLabel"));
+        watchlistItemsLabel->setObjectName(QString::fromUtf8("watchlistItemsLabel"));
         watchlistItemsLabel->setGeometry(QRect(10, 10, 101, 17));
         shoppingListTable = new QTableWidget(BatchWindow);
         if (shoppingListTable->columnCount() < 3)
@@ -74,7 +74,7 @@ public:
         shoppingListTable->setHorizontalHeaderItem(1, __qtablewidgetitem6);
         QTableWidgetItem *__qtablewidgetitem7 = new QTableWidgetItem();
         shoppingListTable->setHorizontalHeaderItem(2, __qtablewidgetitem7);
-        shoppingListTable->setObjectName(QStringLiteral("shoppingListTable"));
+        shoppingListTable->setObjectName(QString::fromUtf8("shoppingListTable"));
         shoppingListTable->setGeometry(QRect(540, 40, 321, 301));
         shoppingListTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
         shoppingListTable->setDragDropOverwriteMode(true);
@@ -83,32 +83,32 @@ public:
         shoppingListTable->horizontalHeader()->setProperty("showSortIndicator", QVariant(true));
         shoppingListTable->verticalHeader()->setProperty("showSortIndicator", QVariant(false));
         shoppingListLabel = new QLabel(BatchWindow);
-        shoppingListLabel->setObjectName(QStringLiteral("shoppingListLabel"));
+        shoppingListLabel->setObjectName(QString::fromUtf8("shoppingListLabel"));
         shoppingListLabel->setGeometry(QRect(540, 10, 91, 17));
         estTotalInvestmentLineEdit = new QLineEdit(BatchWindow);
-        estTotalInvestmentLineEdit->setObjectName(QStringLiteral("estTotalInvestmentLineEdit"));
+        estTotalInvestmentLineEdit->setObjectName(QString::fromUtf8("estTotalInvestmentLineEdit"));
         estTotalInvestmentLineEdit->setGeometry(QRect(540, 370, 161, 29));
         estTotalInvestmentLabel = new QLabel(BatchWindow);
-        estTotalInvestmentLabel->setObjectName(QStringLiteral("estTotalInvestmentLabel"));
+        estTotalInvestmentLabel->setObjectName(QString::fromUtf8("estTotalInvestmentLabel"));
         estTotalInvestmentLabel->setGeometry(QRect(540, 350, 171, 17));
         estTotalProfitLabel = new QLabel(BatchWindow);
-        estTotalProfitLabel->setObjectName(QStringLiteral("estTotalProfitLabel"));
+        estTotalProfitLabel->setObjectName(QString::fromUtf8("estTotalProfitLabel"));
         estTotalProfitLabel->setGeometry(QRect(710, 350, 131, 17));
         estTotalProfitLineEdit = new QLineEdit(BatchWindow);
-        estTotalProfitLineEdit->setObjectName(QStringLiteral("estTotalProfitLineEdit"));
+        estTotalProfitLineEdit->setObjectName(QString::fromUtf8("estTotalProfitLineEdit"));
         estTotalProfitLineEdit->setGeometry(QRect(710, 370, 131, 29));
         totalCraftsLabel = new QLabel(BatchWindow);
-        totalCraftsLabel->setObjectName(QStringLiteral("totalCraftsLabel"));
+        totalCraftsLabel->setObjectName(QString::fromUtf8("totalCraftsLabel"));
         totalCraftsLabel->setGeometry(QRect(850, 350, 71, 17));
         totalCraftsLineEdit = new QLineEdit(BatchWindow);
-        totalCraftsLineEdit->setObjectName(QStringLiteral("totalCraftsLineEdit"));
+        totalCraftsLineEdit->setObjectName(QString::fromUtf8("totalCraftsLineEdit"));
         totalCraftsLineEdit->setGeometry(QRect(850, 370, 71, 29));
         saveButton = new QPushButton(BatchWindow);
-        saveButton->setObjectName(QStringLiteral("saveButton"));
+        saveButton->setObjectName(QString::fromUtf8("saveButton"));
         saveButton->setEnabled(false);
         saveButton->setGeometry(QRect(1000, 370, 89, 27));
         preventOverflowCheckBox = new QCheckBox(BatchWindow);
-        preventOverflowCheckBox->setObjectName(QStringLiteral("preventOverflowCheckBox"));
+        preventOverflowCheckBox->setObjectName(QString::fromUtf8("preventOverflowCheckBox"));
         preventOverflowCheckBox->setGeometry(QRect(110, 10, 131, 21));
         preventOverflowCheckBox->setChecked(true);
         overflowTable = new QTableWidget(BatchWindow);
@@ -118,12 +118,12 @@ public:
         overflowTable->setHorizontalHeaderItem(0, __qtablewidgetitem8);
         QTableWidgetItem *__qtablewidgetitem9 = new QTableWidgetItem();
         overflowTable->setHorizontalHeaderItem(1, __qtablewidgetitem9);
-        overflowTable->setObjectName(QStringLiteral("overflowTable"));
+        overflowTable->setObjectName(QString::fromUtf8("overflowTable"));
         overflowTable->setGeometry(QRect(870, 40, 221, 301));
         overflowTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
         overflowTable->setSortingEnabled(true);
         overflowLabel = new QLabel(BatchWindow);
-        overflowLabel->setObjectName(QStringLiteral("overflowLabel"));
+        overflowLabel->setObjectName(QString::fromUtf8("overflowLabel"));
         overflowLabel->setGeometry(QRect(870, 10, 59, 17));
 
         retranslateUi(BatchWindow);
@@ -133,41 +133,41 @@ public:
 
     void retranslateUi(QWidget *BatchWindow)
     {
-        BatchWindow->setWindowTitle(QApplication::translate("BatchWindow", "Form", 0));
+        BatchWindow->setWindowTitle(QApplication::translate("BatchWindow", "Form", 0, 0));
         QTableWidgetItem *___qtablewidgetitem = watchlistItemsTable->horizontalHeaderItem(0);
-        ___qtablewidgetitem->setText(QApplication::translate("BatchWindow", "Quantity", 0));
+        ___qtablewidgetitem->setText(QApplication::translate("BatchWindow", "Quantity", 0, 0));
         QTableWidgetItem *___qtablewidgetitem1 = watchlistItemsTable->horizontalHeaderItem(1);
-        ___qtablewidgetitem1->setText(QApplication::translate("BatchWindow", "Item Name", 0));
+        ___qtablewidgetitem1->setText(QApplication::translate("BatchWindow", "Item Name", 0, 0));
         QTableWidgetItem *___qtablewidgetitem2 = watchlistItemsTable->horizontalHeaderItem(2);
-        ___qtablewidgetitem2->setText(QApplication::translate("BatchWindow", "Total Cost", 0));
+        ___qtablewidgetitem2->setText(QApplication::translate("BatchWindow", "Total Cost", 0, 0));
         QTableWidgetItem *___qtablewidgetitem3 = watchlistItemsTable->horizontalHeaderItem(3);
-        ___qtablewidgetitem3->setText(QApplication::translate("BatchWindow", "Total Profit", 0));
+        ___qtablewidgetitem3->setText(QApplication::translate("BatchWindow", "Total Profit", 0, 0));
         QTableWidgetItem *___qtablewidgetitem4 = watchlistItemsTable->horizontalHeaderItem(4);
-        ___qtablewidgetitem4->setText(QApplication::translate("BatchWindow", "# Crafts", 0));
-        watchlistItemsLabel->setText(QApplication::translate("BatchWindow", "Watchlist Items", 0));
+        ___qtablewidgetitem4->setText(QApplication::translate("BatchWindow", "# Crafts", 0, 0));
+        watchlistItemsLabel->setText(QApplication::translate("BatchWindow", "Watchlist Items", 0, 0));
         QTableWidgetItem *___qtablewidgetitem5 = shoppingListTable->horizontalHeaderItem(0);
-        ___qtablewidgetitem5->setText(QApplication::translate("BatchWindow", "Item Name", 0));
+        ___qtablewidgetitem5->setText(QApplication::translate("BatchWindow", "Item Name", 0, 0));
         QTableWidgetItem *___qtablewidgetitem6 = shoppingListTable->horizontalHeaderItem(1);
-        ___qtablewidgetitem6->setText(QApplication::translate("BatchWindow", "Quantity", 0));
+        ___qtablewidgetitem6->setText(QApplication::translate("BatchWindow", "Quantity", 0, 0));
         QTableWidgetItem *___qtablewidgetitem7 = shoppingListTable->horizontalHeaderItem(2);
-        ___qtablewidgetitem7->setText(QApplication::translate("BatchWindow", "Price", 0));
-        shoppingListLabel->setText(QApplication::translate("BatchWindow", "Shopping List", 0));
-        estTotalInvestmentLabel->setText(QApplication::translate("BatchWindow", "Estimated Total Investment", 0));
-        estTotalProfitLabel->setText(QApplication::translate("BatchWindow", "Estimated Total Profit", 0));
-        totalCraftsLabel->setText(QApplication::translate("BatchWindow", "Total Crafts", 0));
-        saveButton->setText(QApplication::translate("BatchWindow", "Save", 0));
+        ___qtablewidgetitem7->setText(QApplication::translate("BatchWindow", "Price", 0, 0));
+        shoppingListLabel->setText(QApplication::translate("BatchWindow", "Shopping List", 0, 0));
+        estTotalInvestmentLabel->setText(QApplication::translate("BatchWindow", "Estimated Total Investment", 0, 0));
+        estTotalProfitLabel->setText(QApplication::translate("BatchWindow", "Estimated Total Profit", 0, 0));
+        totalCraftsLabel->setText(QApplication::translate("BatchWindow", "Total Crafts", 0, 0));
+        saveButton->setText(QApplication::translate("BatchWindow", "Save", 0, 0));
 #ifndef QT_NO_TOOLTIP
-        preventOverflowCheckBox->setToolTip(QApplication::translate("BatchWindow", "Adjusts item quantities so there is no leftover materials.", 0));
+        preventOverflowCheckBox->setToolTip(QApplication::translate("BatchWindow", "Adjusts item quantities so there is no leftover materials.", 0, 0));
 #endif // QT_NO_TOOLTIP
 #ifndef QT_NO_WHATSTHIS
         preventOverflowCheckBox->setWhatsThis(QString());
 #endif // QT_NO_WHATSTHIS
-        preventOverflowCheckBox->setText(QApplication::translate("BatchWindow", "Prevent Overflow", 0));
+        preventOverflowCheckBox->setText(QApplication::translate("BatchWindow", "Prevent Overflow", 0, 0));
         QTableWidgetItem *___qtablewidgetitem8 = overflowTable->horizontalHeaderItem(0);
-        ___qtablewidgetitem8->setText(QApplication::translate("BatchWindow", "Item Name", 0));
+        ___qtablewidgetitem8->setText(QApplication::translate("BatchWindow", "Item Name", 0, 0));
         QTableWidgetItem *___qtablewidgetitem9 = overflowTable->horizontalHeaderItem(1);
-        ___qtablewidgetitem9->setText(QApplication::translate("BatchWindow", "Quantity", 0));
-        overflowLabel->setText(QApplication::translate("BatchWindow", "Overflow", 0));
+        ___qtablewidgetitem9->setText(QApplication::translate("BatchWindow", "Quantity", 0, 0));
+        overflowLabel->setText(QApplication::translate("BatchWindow", "Overflow", 0, 0));
     } // retranslateUi
 
 };

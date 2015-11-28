@@ -1,1 +1,0 @@
-CFlip (Craft Flip) Guild Wars 2 Financial Application
