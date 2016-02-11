@@ -7,6 +7,11 @@ crafting materials to sell.
 **Note**: This first time running the application will take a very long time
 (5-10 minutes) while building the files it needs.
 
+## Example Screenshots
+![img1](http://i.imgur.com/w8J9BqF.png)
+
+![img2](http://i.imgur.com/3WqFIK0.png)
+
 ## Build Instructions
 
 1. Clone the repo
